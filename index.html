@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pea Studios — Minecraft Plugin Development</title>
+<meta name="description" content="Professional Minecraft plugins built for small servers. PeaTowny, PeaSkills, PeaForestry, Pealo — powerful tools, easy to use.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--pea:#02f8a1;--pea-dim:#02f8a140;--pea-glow:#02f8a122;
+--cyan:#00eaff;--cyan-dim:#00eaff40;
+--gold:#f8c702;--red:#e74c3c;
+--bg-0:#0a0c0f;--bg-1:#0f1215;--bg-2:#141820;--bg-3:#1a1f28;--bg-4:#222830;
+--text:#e8ecf0;--text-dim:#8a929c;--text-muted:#555e6a;
+--font-display:'Chakra Petch',sans-serif;
+--font-body:'Outfit',sans-serif;
+--font-mono:'JetBrains Mono',monospace;
+--radius:6px;--radius-lg:12px;
+}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--pea-dim) var(--bg-1)}
+body{font-family:var(--font-body);background:var(--bg-0);color:var(--text);line-height:1.6;overflow-x:hidden}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--bg-1)}::-webkit-scrollbar-thumb{background:var(--pea-dim);border-radius:4px}
+
+/* ═══ UTILITY ═══ */
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.section{padding:100px 0;position:relative}
+.section-label{font-family:var(--font-mono);font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pea);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.section-label::before{content:'';width:24px;height:1px;background:var(--pea)}
+.section-title{font-family:var(--font-display);font-size:clamp(28px,5vw,48px);font-weight:700;line-height:1.15;margin-bottom:16px}
+.section-title em{font-style:normal;color:var(--pea)}
+.section-desc{color:var(--text-dim);font-size:17px;max-width:600px;margin-bottom:48px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:var(--radius);font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;transition:all .3s;cursor:pointer;border:none}
+.btn-primary{background:var(--pea);color:var(--bg-0)}
+.btn-primary:hover{box-shadow:0 0 30px var(--pea-dim);transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--pea);border:1px solid var(--pea-dim)}
+.btn-outline:hover{border-color:var(--pea);background:var(--pea-glow)}
+.btn-sm{padding:8px 18px;font-size:12px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media(max-width:900px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+@media(max-width:600px){.section{padding:60px 0}.container{padding:0 16px}}
+
+/* ═══ PIXEL GRID TEXTURE ═══ */
+body::before{content:'';position:fixed;inset:0;background-image:
+  linear-gradient(var(--bg-0) 1px,transparent 1px),
+  linear-gradient(90deg,var(--bg-0) 1px,transparent 1px);
+background-size:48px 48px;opacity:.08;pointer-events:none;z-index:0}
+
+/* ═══ NAV ═══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;transition:all .4s}
+.nav.scrolled{background:var(--bg-0);border-bottom:1px solid var(--bg-3);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:10px 0}
+.nav .container{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px}
+.nav-logo span{color:var(--pea)}
+.nav-logo .logo-dot{width:10px;height:10px;border-radius:50%;background:var(--pea);box-shadow:0 0 12px var(--pea);display:inline-block}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--text-dim);text-decoration:none;font-size:14px;font-weight:500;transition:color .3s;position:relative}
+.nav-links a:hover{color:var(--pea)}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--pea);transition:width .3s}
+.nav-links a:hover::after{width:100%}
+.nav-cta{display:flex;gap:12px;align-items:center}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{width:24px;height:2px;background:var(--text);transition:all .3s}
+@media(max-width:800px){
+.nav-links,.nav-cta{display:none}
+.hamburger{display:flex}
+.nav-links.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--bg-1);padding:24px;gap:20px;border-bottom:1px solid var(--bg-3)}
+.nav-cta.open{display:flex;position:absolute;top:calc(100% + 180px);left:0;right:0;background:var(--bg-1);padding:0 24px 24px;border-bottom:1px solid var(--bg-3)}
+}
+
+/* ═══ HERO ═══ */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:80px}
+.hero-canvas{position:absolute;inset:0;z-index:0}
+.hero-gradient{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,var(--pea-glow),transparent 60%),radial-gradient(ellipse at 80% 20%,#00eaff10,transparent 50%);z-index:1}
+.hero .container{position:relative;z-index:2}
+.hero-content{max-width:700px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border:1px solid var(--bg-4);border-radius:20px;font-size:12px;color:var(--text-dim);margin-bottom:24px;font-family:var(--font-mono)}
+.hero-badge .pulse{width:8px;height:8px;border-radius:50%;background:var(--pea);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 var(--pea-dim)}50%{opacity:.7;box-shadow:0 0 0 8px transparent}}
+.hero h1{font-family:var(--font-display);font-size:clamp(40px,8vw,80px);font-weight:700;line-height:1.05;margin-bottom:20px}
+.hero h1 .line-green{color:var(--pea);display:block}
+.hero p{font-size:18px;color:var(--text-dim);max-width:500px;margin-bottom:36px;line-height:1.7}
+.hero-buttons{display:flex;gap:16px;flex-wrap:wrap}
+.hero-stats{display:flex;gap:48px;margin-top:64px;padding-top:32px;border-top:1px solid var(--bg-3)}
+.hero-stat{text-align:left}
+.hero-stat .num{font-family:var(--font-display);font-size:32px;font-weight:700;color:var(--pea)}
+.hero-stat .label{font-size:13px;color:var(--text-muted);margin-top:4px}
+.hero-visual{position:absolute;right:-100px;top:50%;transform:translateY(-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,var(--pea-glow),transparent 70%);filter:blur(60px);z-index:0}
+@media(max-width:600px){.hero-stats{gap:24px;flex-wrap:wrap}.hero-stat .num{font-size:24px}}
+
+/* ═══ ABOUT ═══ */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.about-visual{position:relative;height:360px;border-radius:var(--radius-lg);overflow:hidden;background:var(--bg-2);border:1px solid var(--bg-3)}
+.about-visual-inner{position:absolute;inset:24px;border:1px solid var(--pea-dim);border-radius:var(--radius);display:grid;place-items:center}
+.about-visual-inner::before{content:'🫛';font-size:80px;filter:drop-shadow(0 0 40px var(--pea-dim))}
+.about-values{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
+.about-value{padding:20px;background:var(--bg-2);border-radius:var(--radius);border:1px solid var(--bg-3)}
+.about-value h4{font-family:var(--font-display);font-size:14px;margin-bottom:6px;color:var(--pea)}
+.about-value p{font-size:13px;color:var(--text-dim);line-height:1.5}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr}.about-visual{height:240px}}
+
+/* ═══ PLUGINS ═══ */
+.plugin-tabs{display:flex;gap:4px;margin-bottom:32px;background:var(--bg-2);border-radius:var(--radius);padding:4px;overflow-x:auto}
+.plugin-tab{padding:12px 24px;border-radius:var(--radius);font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:.5px;color:var(--text-dim);cursor:pointer;transition:all .3s;white-space:nowrap;border:none;background:none}
+.plugin-tab.active{background:var(--pea);color:var(--bg-0)}
+.plugin-tab:hover:not(.active){color:var(--text)}
+.plugin-panel{display:none;animation:fadeIn .4s}
+.plugin-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.plugin-header{display:grid;grid-template-columns:1fr auto;gap:32px;margin-bottom:40px;align-items:start}
+.plugin-status{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:12px;font-size:12px;font-family:var(--font-mono);font-weight:500}
+.status-released{background:#02f8a120;color:var(--pea);border:1px solid var(--pea-dim)}
+.status-dev{background:#f8c70220;color:var(--gold);border:1px solid #f8c70240}
+.plugin-name{font-family:var(--font-display);font-size:clamp(28px,4vw,42px);font-weight:700;margin:12px 0 8px}
+.plugin-tagline{color:var(--text-dim);font-size:16px;margin-bottom:16px}
+.plugin-links{display:flex;gap:12px;flex-wrap:wrap}
+.plugin-meta{text-align:right}
+.plugin-price{font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--pea)}
+.plugin-price-sub{font-size:13px;color:var(--text-muted);margin-top:4px}
+
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:40px}
+.feature-card{padding:24px;background:var(--bg-2);border:1px solid var(--bg-3);border-radius:var(--radius);transition:all .3s}
+.feature-card:hover{border-color:var(--pea-dim);transform:translateY(-2px)}
+.feature-card .icon{font-size:24px;margin-bottom:12px}
+.feature-card h4{font-family:var(--font-display);font-size:15px;margin-bottom:8px}
+.feature-card p{font-size:13px;color:var(--text-dim);line-height:1.6}
+.feature-card ul{list-style:none;margin-top:8px}
+.feature-card ul li{font-size:13px;color:var(--text-dim);padding:3px 0;padding-left:16px;position:relative}
+.feature-card ul li::before{content:'›';position:absolute;left:0;color:var(--pea);font-weight:700}
+
+.premium-banner{background:linear-gradient(135deg,var(--bg-2),var(--bg-3));border:1px solid var(--gold);border-radius:var(--radius-lg);padding:32px;margin:32px 0}
+.premium-banner h3{font-family:var(--font-display);font-size:22px;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.premium-features{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:20px}
+.premium-feat{display:flex;align-items:start;gap:10px;font-size:13px;color:var(--text-dim)}
+.premium-feat::before{content:'★';color:var(--gold);font-size:12px;margin-top:2px;flex-shrink:0}
+
+/* skill table */
+.skill-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:13px}
+.skill-table th{text-align:left;padding:12px 16px;background:var(--bg-3);color:var(--pea);font-family:var(--font-display);font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase}
+.skill-table td{padding:10px 16px;border-bottom:1px solid var(--bg-3);color:var(--text-dim)}
+.skill-table tr:hover td{background:var(--bg-2)}
+.skill-table .skill-name{color:var(--text);font-weight:500}
+
+/* rank ladder */
+.rank-ladder{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}
+.rank-badge{padding:6px 14px;border-radius:var(--radius);font-family:var(--font-mono);font-size:12px;font-weight:500;border:1px solid}
+.rank-copper{border-color:#b87333;color:#b87333;background:#b8733310}
+.rank-bronze{border-color:#cd7f32;color:#cd7f32;background:#cd7f3210}
+.rank-iron{border-color:#8a8a8a;color:#8a8a8a;background:#8a8a8a10}
+.rank-steel{border-color:#a0b0c0;color:#a0b0c0;background:#a0b0c010}
+.rank-gold{border-color:#ffd700;color:#ffd700;background:#ffd70010}
+.rank-platinum{border-color:#e5e5e5;color:#e5e5e5;background:#e5e5e510}
+.rank-diamond{border-color:#00d4ff;color:#00d4ff;background:#00d4ff10}
+.rank-master{border-color:#9b59b6;color:#9b59b6;background:#9b59b610}
+.rank-grandmaster{border-color:#e74c3c;color:#e74c3c;background:#e74c3c10}
+.rank-apex{border-color:#f8c702;color:#f8c702;background:#f8c70220}
+
+@media(max-width:700px){.plugin-header{grid-template-columns:1fr}.plugin-meta{text-align:left}}
+
+/* ═══ API SECTION ═══ */
+.api-block{background:var(--bg-2);border:1px solid var(--bg-3);border-radius:var(--radius-lg);padding:32px;margin-bottom:24px}
+.api-block h3{font-family:var(--font-display);font-size:20px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.api-block h3 .tag{font-size:11px;padding:3px 10px;border-radius:10px;background:var(--pea-glow);color:var(--pea);font-family:var(--font-mono)}
+.api-block h4{font-family:var(--font-display);font-size:14px;color:var(--cyan);margin:20px 0 10px}
+.api-code{background:var(--bg-0);border:1px solid var(--bg-3);border-radius:var(--radius);padding:20px;font-family:var(--font-mono);font-size:12px;line-height:1.8;overflow-x:auto;color:var(--text-dim);margin:12px 0}
+.api-code .kw{color:var(--cyan)}
+.api-code .fn{color:var(--pea)}
+.api-code .str{color:var(--gold)}
+.api-code .cm{color:var(--text-muted)}
+.placeholder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:8px}
+.placeholder-item{display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg-0);border-radius:var(--radius);font-family:var(--font-mono);font-size:11px}
+.placeholder-item .ph-name{color:var(--pea)}
+.placeholder-item .ph-desc{color:var(--text-muted);text-align:right}
+.api-accordion{border:1px solid var(--bg-3);border-radius:var(--radius);margin:8px 0;overflow:hidden}
+.api-accordion summary{padding:12px 16px;cursor:pointer;font-family:var(--font-display);font-size:14px;background:var(--bg-3);color:var(--text);transition:background .3s}
+.api-accordion summary:hover{background:var(--bg-4)}
+.api-accordion .acc-content{padding:16px}
+
+/* ═══ PRICING ═══ */
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:800px;margin:0 auto}
+.pricing-card{background:var(--bg-2);border:1px solid var(--bg-3);border-radius:var(--radius-lg);padding:40px 32px;position:relative;transition:all .3s}
+.pricing-card.featured{border-color:var(--pea);box-shadow:0 0 40px var(--pea-glow)}
+.pricing-card.featured::before{content:'MOST POPULAR';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--pea);color:var(--bg-0);font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 16px;border-radius:10px}
+.pricing-card h3{font-family:var(--font-display);font-size:24px;margin-bottom:4px}
+.pricing-card .price{font-family:var(--font-display);font-size:40px;font-weight:700;color:var(--pea);margin:16px 0}
+.pricing-card .price span{font-size:16px;color:var(--text-muted);font-weight:400}
+.pricing-card .price-desc{font-size:13px;color:var(--text-muted);margin-bottom:24px}
+.pricing-features{list-style:none}
+.pricing-features li{padding:8px 0;font-size:14px;color:var(--text-dim);display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--bg-3)}
+.pricing-features li:last-child{border:none}
+.pricing-features .check{color:var(--pea);font-size:16px}
+.pricing-features .cross{color:var(--text-muted);font-size:16px}
+.commission-card{background:var(--bg-2);border:1px solid var(--bg-3);border-radius:var(--radius-lg);padding:40px;margin-top:40px;text-align:center;max-width:800px;margin-left:auto;margin-right:auto}
+.commission-card h3{font-family:var(--font-display);font-size:24px;margin-bottom:12px}
+.commission-card p{color:var(--text-dim);font-size:15px;margin-bottom:24px}
+@media(max-width:700px){.pricing-grid{grid-template-columns:1fr}}
+
+/* ═══ MEDIA ═══ */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.media-slot{aspect-ratio:16/9;background:var(--bg-2);border:1px dashed var(--bg-4);border-radius:var(--radius-lg);display:grid;place-items:center;transition:all .3s;overflow:hidden;position:relative}
+.media-slot:hover{border-color:var(--pea-dim)}
+.media-slot img,.media-slot video{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.media-placeholder{text-align:center;color:var(--text-muted);font-size:13px}
+.media-placeholder .icon{font-size:32px;margin-bottom:8px;opacity:.5}
+
+/* ═══ ROADMAP ═══ */
+.roadmap-track{position:relative;padding-left:32px}
+.roadmap-track::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--pea),var(--cyan),var(--gold))}
+.roadmap-item{position:relative;margin-bottom:32px;padding:24px;background:var(--bg-2);border:1px solid var(--bg-3);border-radius:var(--radius)}
+.roadmap-item::before{content:'';position:absolute;left:-29px;top:28px;width:12px;height:12px;border-radius:50%;border:2px solid;background:var(--bg-0)}
+.roadmap-item.done::before{border-color:var(--pea);background:var(--pea);box-shadow:0 0 8px var(--pea-dim)}
+.roadmap-item.progress::before{border-color:var(--cyan);background:var(--cyan);box-shadow:0 0 8px var(--cyan-dim)}
+.roadmap-item.planned::before{border-color:var(--text-muted)}
+.roadmap-item h4{font-family:var(--font-display);font-size:16px;margin-bottom:6px}
+.roadmap-item p{font-size:13px;color:var(--text-dim)}
+.roadmap-item .rm-status{font-family:var(--font-mono);font-size:11px;margin-bottom:8px}
+.roadmap-item.done .rm-status{color:var(--pea)}
+.roadmap-item.progress .rm-status{color:var(--cyan)}
+.roadmap-item.planned .rm-status{color:var(--text-muted)}
+
+/* ═══ COMMUNITY ═══ */
+.community-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.community-card{padding:32px;background:var(--bg-2);border:1px solid var(--bg-3);border-radius:var(--radius-lg);text-align:center;transition:all .3s}
+.community-card:hover{border-color:var(--pea-dim);transform:translateY(-4px)}
+.community-card .icon{font-size:40px;margin-bottom:16px}
+.community-card h4{font-family:var(--font-display);font-size:18px;margin-bottom:8px}
+.community-card p{font-size:13px;color:var(--text-dim);margin-bottom:20px;line-height:1.6}
+@media(max-width:700px){.community-grid{grid-template-columns:1fr}}
+
+/* ═══ FOOTER ═══ */
+.footer{padding:60px 0 30px;border-top:1px solid var(--bg-3);background:var(--bg-1)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.footer-brand h3{font-family:var(--font-display);font-size:20px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.footer-brand h3 span{color:var(--pea)}
+.footer-brand p{font-size:13px;color:var(--text-muted);line-height:1.6;max-width:280px}
+.footer-col h4{font-family:var(--font-display);font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px}
+.footer-col a{display:block;color:var(--text-muted);text-decoration:none;font-size:13px;padding:4px 0;transition:color .3s}
+.footer-col a:hover{color:var(--pea)}
+.footer-bottom{text-align:center;padding-top:24px;border-top:1px solid var(--bg-3);font-size:12px;color:var(--text-muted)}
+@media(max-width:700px){.footer-grid{grid-template-columns:1fr 1fr}}
+
+/* ═══ SCROLL REVEAL ═══ */
+.reveal{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.25,.46,.45,.94)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="nav" id="nav">
+  <div class="container">
+    <a href="#" class="nav-logo"><span class="logo-dot"></span>PEA <span>STUDIOS</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#plugins">Plugins</a></li>
+      <li><a href="#api">API</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#media">Media</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#community">Community</a></li>
+    </ul>
+    <div class="nav-cta" id="navCta">
+      <a href="https://discord.gg/Y8QhgYaq6K" class="btn btn-outline btn-sm" target="_blank">Discord</a>
+      <a href="https://builtbybit.com/resources/peatowny.102838/" class="btn btn-primary btn-sm" target="_blank">Get Plugins</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero" id="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="hero-gradient"></div>
+  <div class="hero-visual"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge"><span class="pulse"></span> Now on BuiltByBit</div>
+      <h1>Crafting the<br><span class="line-green">tools servers<br>deserve.</span></h1>
+      <p>Professional Minecraft plugins built for small servers. Powerful features, familiar commands, zero hassle.</p>
+      <div class="hero-buttons">
+        <a href="#plugins" class="btn btn-primary">Explore Plugins</a>
+        <a href="https://discord.gg/Y8QhgYaq6K" class="btn btn-outline" target="_blank">Join Discord</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num" data-count="4">0</div><div class="label">Plugins</div></div>
+        <div class="hero-stat"><div class="num" data-count="41">0</div><div class="label">Community Members</div></div>
+        <div class="hero-stat"><div class="num" data-count="160">0</div><div class="label">Features</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ABOUT ═══════════ -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="section-label">About Us</div>
+        <h2 class="section-title">Built by developers,<br><em>for server owners.</em></h2>
+        <p class="section-desc">Pea Studios is a small development studio focused on building high-quality Minecraft plugins. Founded in 2026, our mission is simple: create tools that are powerful yet easy to use — plugins that work out of the box with familiar commands, so switching from Towny, Lands, or other plugins is seamless.</p>
+        <p style="color:var(--text-dim);font-size:15px;margin-bottom:32px">We target small and mid-sized servers because they deserve premium-quality tools at accessible prices. Every plugin we build is designed with real server owners in mind.</p>
+        <div class="about-values">
+          <div class="about-value"><h4>Drop-In Ready</h4><p>Familiar commands. No learning curve. Install and go.</p></div>
+          <div class="about-value"><h4>Small Server Focus</h4><p>Built and optimized for the communities that need us most.</p></div>
+          <div class="about-value"><h4>Active Development</h4><p>New features, bug fixes, and improvements every week.</p></div>
+          <div class="about-value"><h4>Community Driven</h4><p>Suggestions and bug reports shape our roadmap directly.</p></div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="about-visual">
+          <div class="about-visual-inner"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PLUGINS ═══════════ -->
+<section class="section" id="plugins" style="background:var(--bg-1)">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Plugin Catalog</div>
+      <h2 class="section-title">Four plugins. <em>Infinite possibilities.</em></h2>
+      <p class="section-desc">Every plugin in our catalog is built with the same philosophy: powerful features, clean code, and zero bloat.</p>
+    </div>
+
+    <div class="plugin-tabs reveal">
+      <button class="plugin-tab active" data-tab="peatowny">PeaTowny</button>
+      <button class="plugin-tab" data-tab="peaskills">PeaSkills</button>
+      <button class="plugin-tab" data-tab="peaforestry">PeaForestry</button>
+      <button class="plugin-tab" data-tab="pealo">Pealo</button>
+    </div>
+
+    <!-- ── PEATOWNY ── -->
+    <div class="plugin-panel active" id="panel-peatowny">
+      <div class="plugin-header">
+        <div>
+          <span class="plugin-status status-released">● Released</span>
+          <h3 class="plugin-name">PeaTowny</h3>
+          <p class="plugin-tagline">A modern alternative to Towny &amp; Lands for Paper 1.21.1+. Built with familiar commands so switching is seamless.</p>
+          <div class="plugin-links">
+            <a href="https://builtbybit.com/resources/peatowny.102838/" class="btn btn-primary btn-sm" target="_blank">Download Free</a>
+            <a href="https://pea-studios.github.io/peatowny-wiki/#hero" class="btn btn-outline btn-sm" target="_blank">Wiki</a>
+          </div>
+        </div>
+        <div class="plugin-meta">
+          <div class="plugin-price">Free</div>
+          <div class="plugin-price-sub">Premium from $20</div>
+        </div>
+      </div>
+
+      <h4 style="font-family:var(--font-display);font-size:16px;margin-bottom:16px;color:var(--text)">Core Features (Free Edition)</h4>
+      <div class="feature-grid">
+        <div class="feature-card"><div class="icon">🏗️</div><h4>Land Claiming</h4><p>Chunk-based claiming system with selection tool, auto-claim mode, and claim blocks. Base 10 chunks + 5 per member.</p></div>
+        <div class="feature-card"><div class="icon">👥</div><h4>Roles &amp; Permissions</h4><p>4 default roles + custom roles with 61 granular permission flags covering blocks, containers, combat, animals, workstations, and utilities.</p></div>
+        <div class="feature-card"><div class="icon">💰</div><h4>Economy</h4><p>Full Vault integration with land treasury, per-chunk costs, teleport costs, and configurable economic cycles.</p></div>
+        <div class="feature-card"><div class="icon">⚔️</div><h4>War System</h4><p>Kill-point wars with live scoreboard, progress bars, and land transfer on victory. Declare, fight, conquer.</p></div>
+        <div class="feature-card"><div class="icon">🔮</div><h4>Beacon Warps</h4><p>Unique public warp system — step on beacons to browse warps. Paginated GUI with search, categories, and custom icons.</p></div>
+        <div class="feature-card"><div class="icon">🗺️</div><h4>Map Integration</h4><p>Dynmap &amp; BlueMap support for visualizing claimed lands on your web map.</p></div>
+        <div class="feature-card"><div class="icon">🔄</div><h4>Migration</h4><p>Built-in Towny migration support. Switch from Towny or Lands without losing data.</p></div>
+        <div class="feature-card"><div class="icon">🛡️</div><h4>Full Protection</h4><p>Explosions, fire spread, mob spawning, PvP, pistons, liquid flow — all configurable per-land and for wilderness.</p></div>
+        <div class="feature-card"><div class="icon">💬</div><h4>Land Chat</h4><p>Private communication channel for land members. Keep town discussions in-game.</p></div>
+      </div>
+
+      <div class="premium-banner">
+        <h3>⭐ Premium Features — $20</h3>
+        <p style="color:var(--text-dim);font-size:14px">Everything in Free, plus powerful systems for serious servers.</p>
+        <div class="premium-features">
+          <div class="premium-feat">Nations — group lands under shared governance with taxes and diplomacy</div>
+          <div class="premium-feat">Conquest War Mode — capture chunks, build capture fences, beacon captures for instant wins</div>
+          <div class="premium-feat">Land Levels — 5 tiers (Settlement → Village → Town → Province → Land) with bonus chunks</div>
+          <div class="premium-feat">Relations — ally, neutral, and enemy stances between lands</div>
+          <div class="premium-feat">Upkeep System — per-chunk maintenance costs with unclaim-on-fail</div>
+          <div class="premium-feat">Nation Taxes — nations collect from member lands with min/max config</div>
+          <div class="premium-feat">Land Fly — fly within your own lands with configurable disable delay</div>
+          <div class="premium-feat">Rent &amp; Sell — lease or sell lands to other players</div>
+          <div class="premium-feat">Land Storage — per-land item storage system</div>
+          <div class="premium-feat">Sub-Areas — nested territories with independent role settings</div>
+          <div class="premium-feat">Discord Integration — connect towns to Discord channels</div>
+          <div class="premium-feat">Land Expiration — auto-delete inactive lands after configurable days</div>
+          <div class="premium-feat">Tribute System — winners collect ongoing tribute from defeated lands</div>
+          <div class="premium-feat">War Shields — cooldown protection after war ends</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PEASKILLS ── -->
+    <div class="plugin-panel" id="panel-peaskills">
+      <div class="plugin-header">
+        <div>
+          <span class="plugin-status status-released">● Complete</span>
+          <h3 class="plugin-name">PeaSkills</h3>
+          <p class="plugin-tagline">A minimalistic skills and leveling plugin with 8 skill trees and 40 unlockable perks. No bloat, pure progression.</p>
+        </div>
+        <div class="plugin-meta">
+          <div class="plugin-price">TBA</div>
+          <div class="plugin-price-sub">Coming soon</div>
+        </div>
+      </div>
+
+      <h4 style="font-family:var(--font-display);font-size:16px;margin-bottom:16px;color:var(--text)">8 Skill Trees</h4>
+      <div class="feature-grid">
+        <div class="feature-card"><div class="icon">⛏️</div><h4>Mining</h4><p>Break ores for XP. Perks: Miner's Haste, Auto Smelt, Double Ore (10%), Vein Miner (3-block radius), Fortune Master.</p></div>
+        <div class="feature-card"><div class="icon">⚔️</div><h4>Combat</h4><p>Deal damage for XP, bonus for kills. Perks: Lifesteal (5%), Critical Edge, Combat Regen, Berserker, Undying.</p></div>
+        <div class="feature-card"><div class="icon">🌾</div><h4>Farming</h4><p>Harvest crops and breed animals. Perks: Green Thumb, Auto Replant, Double Harvest, Nature's Blessing, Harvest Aura.</p></div>
+        <div class="feature-card"><div class="icon">🪓</div><h4>Woodcutting</h4><p>Chop logs for XP. Perks: Lumber Efficiency, Double Logs, Leaf Blower, Timber (32-log tree fell), Planks Master.</p></div>
+        <div class="feature-card"><div class="icon">🎣</div><h4>Fishing</h4><p>Catch fish and treasure. Perks: Lucky Catch, Treasure Hunter, Fish Frenzy, and more.</p></div>
+        <div class="feature-card"><div class="icon">🏹</div><h4>Archery</h4><p>Hit and kill with bow for XP. Perks: Steady Aim, Flame Arrows, Multi Shot, Sniper, Arrow Storm.</p></div>
+        <div class="feature-card"><div class="icon">🧪</div><h4>Alchemy</h4><p>Brew potions for XP. Perks: Extended Duration, Splash Master, Potion Saver, Toxin Immune, Alchemist Aura.</p></div>
+        <div class="feature-card"><div class="icon">🪣</div><h4>Excavation</h4><p>Dig earth blocks for XP. Perks: Treasure Digger, Quick Shovel, Archaeologist, Excavate (3x3), Earth Master.</p></div>
+      </div>
+
+      <div class="feature-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+        <div class="feature-card"><div class="icon">💀</div><h4>Hardcore Mode</h4><p>Level one skill, drain XP from others. True specialization for competitive servers.</p></div>
+        <div class="feature-card"><div class="icon">📊</div><h4>40 Perks</h4><p>5 perks per skill unlocked at levels 10, 25, 50, 75, and 100.</p></div>
+        <div class="feature-card"><div class="icon">📱</div><h4>Skills GUI</h4><p>Clean inventory-based menu showing all skills, XP progress, and next unlock.</p></div>
+        <div class="feature-card"><div class="icon">✨</div><h4>Action Bar XP</h4><p>Real-time XP feedback in the action bar without spamming the chat.</p></div>
+      </div>
+    </div>
+
+    <!-- ── PEAFORESTRY ── -->
+    <div class="plugin-panel" id="panel-peaforestry">
+      <div class="plugin-header">
+        <div>
+          <span class="plugin-status status-released">● Complete</span>
+          <h3 class="plugin-name">PeaForestry</h3>
+          <p class="plugin-tagline">Forest degradation simulation. Trees don't just grow back — manage your world's ecosystem or watch it collapse.</p>
+        </div>
+        <div class="plugin-meta">
+          <div class="plugin-price">TBA</div>
+          <div class="plugin-price-sub">Coming soon</div>
+        </div>
+      </div>
+
+      <h4 style="font-family:var(--font-display);font-size:16px;margin-bottom:16px;color:var(--text)">3-Stage Degradation System</h4>
+      <div class="feature-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="feature-card" style="border-top:3px solid var(--pea)">
+          <div class="icon">🍃</div><h4>Stage 1: Leaf Loss</h4>
+          <p>After the stress threshold is reached (configurable, default 15 logs), nearby trees begin losing their leaves. A visual warning that the forest is under pressure.</p>
+        </div>
+        <div class="feature-card" style="border-top:3px solid var(--cyan)">
+          <div class="icon">🌲</div><h4>Stage 2: Tree Collapse</h4>
+          <p>Trees fall sequentially with particles and sound effects. A boss bar shows collapse progress to nearby players. Configurable collapse speed.</p>
+        </div>
+        <div class="feature-card" style="border-top:3px solid var(--red)">
+          <div class="icon">💀</div><h4>Stage 3: Ground Decay</h4>
+          <p>The earth itself degrades. Dirt, grass, sand, and gravel are removed, creating an expanding dead zone up to 60 blocks radius.</p>
+        </div>
+      </div>
+
+      <div class="feature-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));margin-top:16px">
+        <div class="feature-card"><div class="icon">🌳</div><h4>8 Tree Types</h4><p>Oak, Birch, Spruce, Jungle, Acacia, Dark Oak, Mangrove, Cherry.</p></div>
+        <div class="feature-card"><div class="icon">⚡</div><h4>Performance</h4><p>Batch processing, concurrent maps, chunk indexing. Zero lag spikes.</p></div>
+        <div class="feature-card"><div class="icon">🎛️</div><h4>Configurable</h4><p>Stress thresholds, collapse speed, decay radius, particles, sounds — all adjustable.</p></div>
+        <div class="feature-card"><div class="icon">🔧</div><h4>Admin Tools</h4><p>/pf reload, status, reset, test. Full control over forest state.</p></div>
+      </div>
+    </div>
+
+    <!-- ── PEALO ── -->
+    <div class="plugin-panel" id="panel-pealo">
+      <div class="plugin-header">
+        <div>
+          <span class="plugin-status status-released">● Complete</span>
+          <h3 class="plugin-name">Pealo</h3>
+          <p class="plugin-tagline">Dynamic ELO-based PvP ranking system. Track combat performance, climb ranks, and dominate the leaderboard.</p>
+        </div>
+        <div class="plugin-meta">
+          <div class="plugin-price">TBA</div>
+          <div class="plugin-price-sub">Coming soon</div>
+        </div>
+      </div>
+
+      <h4 style="font-family:var(--font-display);font-size:16px;margin-bottom:12px;color:var(--text)">10-Tier Rank System</h4>
+      <div class="rank-ladder">
+        <span class="rank-badge rank-copper">Copper 1000+</span>
+        <span class="rank-badge rank-bronze">Bronze 1200+</span>
+        <span class="rank-badge rank-iron">Iron 1400+</span>
+        <span class="rank-badge rank-steel">Steel 1600+</span>
+        <span class="rank-badge rank-gold">Gold 1800+</span>
+        <span class="rank-badge rank-platinum">Platinum 2000+</span>
+        <span class="rank-badge rank-diamond">Diamond 2300+</span>
+        <span class="rank-badge rank-master">Master 2600+</span>
+        <span class="rank-badge rank-grandmaster">Grandmaster 3000+</span>
+        <span class="rank-badge rank-apex">Apex 3500+</span>
+      </div>
+
+      <div class="feature-grid" style="margin-top:24px">
+        <div class="feature-card"><div class="icon">📈</div><h4>Dynamic ELO</h4><p>Gain more ELO from beating stronger opponents. Base gain of 15 scales by opponent-to-player ELO ratio. Range: 1–40 per kill.</p></div>
+        <div class="feature-card"><div class="icon">🪙</div><h4>Kill Points Economy</h4><p>Earn Kill Points (KP) from combat, spend them in the cosmetic shop. Dynamic scaling like ELO, range 1–50 KP per kill.</p></div>
+        <div class="feature-card"><div class="icon">🛡️</div><h4>Anti-Farm System</h4><p>Prevents reward farming — kills on the same player stop rewarding after threshold (default 2). 180s window, 240s cooldown.</p></div>
+        <div class="feature-card"><div class="icon">🤝</div><h4>Assist Tracking</h4><p>Deal 20%+ of total damage to qualify for assists. Earn 0.5x ELO and KP from assisted kills.</p></div>
+        <div class="feature-card"><div class="icon">🏆</div><h4>Leaderboard GUI</h4><p>Top 100 players with pagination. Podium display for top 3, click-to-view stats. 60-second cache for performance.</p></div>
+        <div class="feature-card"><div class="icon">🛒</div><h4>Cosmetic Shop</h4><p>Admin-editable shop GUI. Buy items or execute commands with Kill Points. Paginated with display previews.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ API ═══════════ -->
+<section class="section" id="api">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Developer API</div>
+      <h2 class="section-title">Build on top of <em>our plugins.</em></h2>
+      <p class="section-desc">Extend our plugins with addons, integrate with PlaceholderAPI, and hook into our events.</p>
+    </div>
+
+    <!-- PeaTowny API -->
+    <div class="api-block reveal">
+      <h3>PeaTowny API <span class="tag">Addon System</span></h3>
+      <p style="font-size:14px;color:var(--text-dim);margin-bottom:20px">PeaTowny has a full addon system. Drop JAR files into <code style="color:var(--pea);font-family:var(--font-mono);font-size:13px">plugins/PeaTowny/addons/</code> and they load automatically with their own lifecycle.</p>
+
+      <div class="api-code">
+<span class="cm">// Example: Accessing the PeaTowny API</span>
+<span class="kw">PeaTownyAPI</span> api = <span class="kw">PeaTownyAPI</span>.<span class="fn">getInstance</span>();
+
+<span class="cm">// Land queries</span>
+<span class="kw">Land</span> land = api.<span class="fn">getLandAt</span>(player.getLocation());
+<span class="kw">List</span>&lt;Land&gt; lands = api.<span class="fn">getLandsByOwner</span>(playerId);
+
+<span class="cm">// Permission checks</span>
+<span class="kw">boolean</span> canBreak = api.<span class="fn">hasPermission</span>(landId, playerId, RoleFlag.BLOCK_BREAK);
+
+<span class="cm">// Economy</span>
+api.<span class="fn">deposit</span>(landId, <span class="str">500.0</span>);
+<span class="kw">double</span> balance = api.<span class="fn">getBalance</span>(landId);
+
+<span class="cm">// Nations &amp; Wars</span>
+<span class="kw">Nation</span> nation = api.<span class="fn">getNation</span>(nationId);
+<span class="kw">List</span>&lt;War&gt; wars = api.<span class="fn">getActiveWars</span>();
+      </div>
+
+      <details class="api-accordion">
+        <summary>PlaceholderAPI — Server-wide Placeholders</summary>
+        <div class="acc-content">
+          <div class="placeholder-grid">
+            <div class="placeholder-item"><span class="ph-name">%peatowny_total_lands%</span><span class="ph-desc">Total land count</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_total_chunks%</span><span class="ph-desc">Total claimed chunks</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_total_nations%</span><span class="ph-desc">Total nations</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_total_wars%</span><span class="ph-desc">Active wars</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_total_players%</span><span class="ph-desc">Total registered players</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="api-accordion">
+        <summary>PlaceholderAPI — Player Placeholders</summary>
+        <div class="acc-content">
+          <div class="placeholder-grid">
+            <div class="placeholder-item"><span class="ph-name">%peatowny_player_land_count%</span><span class="ph-desc">Lands owned</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_player_member_of_count%</span><span class="ph-desc">Lands member of</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_player_at_war%</span><span class="ph-desc">Is at war (true/false)</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_player_in_combat%</span><span class="ph-desc">In combat tag</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_player_nation%</span><span class="ph-desc">Nation name</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="api-accordion">
+        <summary>PlaceholderAPI — Land Placeholders (Current Location)</summary>
+        <div class="acc-content">
+          <div class="placeholder-grid">
+            <div class="placeholder-item"><span class="ph-name">%peatowny_land_name%</span><span class="ph-desc">Land name</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_land_owner%</span><span class="ph-desc">Owner name</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_land_members%</span><span class="ph-desc">Member count</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_land_balance_formatted%</span><span class="ph-desc">Treasury balance</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_land_level%</span><span class="ph-desc">Land level tier</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_land_resource%</span><span class="ph-desc">Resource type</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_land_at_war%</span><span class="ph-desc">War status</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="api-accordion">
+        <summary>PlaceholderAPI — Nation Placeholders</summary>
+        <div class="acc-content">
+          <div class="placeholder-grid">
+            <div class="placeholder-item"><span class="ph-name">%peatowny_nation_name%</span><span class="ph-desc">Nation name</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_nation_capital%</span><span class="ph-desc">Capital land</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_nation_land_count%</span><span class="ph-desc">Lands in nation</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_nation_balance_formatted%</span><span class="ph-desc">Nation treasury</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="api-accordion">
+        <summary>PlaceholderAPI — War Placeholders</summary>
+        <div class="acc-content">
+          <div class="placeholder-grid">
+            <div class="placeholder-item"><span class="ph-name">%peatowny_war_active%</span><span class="ph-desc">Has active war</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_war_attacker%</span><span class="ph-desc">Attacker name</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_war_defender%</span><span class="ph-desc">Defender name</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_war_remaining%</span><span class="ph-desc">Time remaining</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="api-accordion">
+        <summary>PlaceholderAPI — Leaderboard &amp; Relations</summary>
+        <div class="acc-content">
+          <div class="placeholder-grid">
+            <div class="placeholder-item"><span class="ph-name">%peatowny_top_land_balance_1_name%</span><span class="ph-desc">Richest land #1</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_top_land_balance_2_name%</span><span class="ph-desc">Richest land #2</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_top_land_balance_3_name%</span><span class="ph-desc">Richest land #3</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_top_land_balance_4_name%</span><span class="ph-desc">Richest land #4</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_top_land_balance_5_name%</span><span class="ph-desc">Richest land #5</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_rel_relation%</span><span class="ph-desc">Relation with target</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_rel_is_ally%</span><span class="ph-desc">Is allied</span></div>
+            <div class="placeholder-item"><span class="ph-name">%peatowny_rel_enemy_count%</span><span class="ph-desc">Enemy count</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- PeaSkills API -->
+    <div class="api-block reveal">
+      <h3>PeaSkills <span class="tag">Commands</span></h3>
+      <div class="api-code">
+<span class="cm">// Player Commands</span>
+<span class="fn">/skills</span>              <span class="cm">— Open the skills GUI menu</span>
+
+<span class="cm">// Admin Commands</span>
+<span class="fn">/skilladmin reload</span>                           <span class="cm">— Reload config</span>
+<span class="fn">/skilladmin setlevel</span> <span class="str">&lt;player&gt; &lt;skill&gt; &lt;level&gt;</span>  <span class="cm">— Set skill level</span>
+<span class="fn">/skilladmin addxp</span> <span class="str">&lt;player&gt; &lt;skill&gt; &lt;amount&gt;</span>    <span class="cm">— Add XP to skill</span>
+<span class="fn">/skilladmin reset</span> <span class="str">&lt;player&gt; [skill]</span>            <span class="cm">— Reset skill(s)</span>
+      </div>
+    </div>
+
+    <!-- Pealo API -->
+    <div class="api-block reveal">
+      <h3>Pealo <span class="tag">PlaceholderAPI</span></h3>
+      <p style="font-size:14px;color:var(--text-dim);margin-bottom:16px">Integrate Pealo stats into scoreboards, tab lists, and other plugins.</p>
+      <div class="placeholder-grid">
+        <div class="placeholder-item"><span class="ph-name">%pealo_elo%</span><span class="ph-desc">Current ELO rating</span></div>
+        <div class="placeholder-item"><span class="ph-name">%pealo_rank%</span><span class="ph-desc">Current rank name</span></div>
+        <div class="placeholder-item"><span class="ph-name">%pealo_kills%</span><span class="ph-desc">Total kills</span></div>
+        <div class="placeholder-item"><span class="ph-name">%pealo_deaths%</span><span class="ph-desc">Total deaths</span></div>
+        <div class="placeholder-item"><span class="ph-name">%pealo_kdr%</span><span class="ph-desc">Kill/death ratio</span></div>
+        <div class="placeholder-item"><span class="ph-name">%pealo_kills_points%</span><span class="ph-desc">Kill Points balance</span></div>
+      </div>
+
+      <div class="api-code" style="margin-top:16px">
+<span class="cm">// Player Commands</span>
+<span class="fn">/elo stats</span> <span class="str">[player]</span>   <span class="cm">— View player stats</span>
+<span class="fn">/elo top</span>              <span class="cm">— View leaderboard</span>
+<span class="fn">/elo search</span> <span class="str">&lt;name&gt;</span>    <span class="cm">— Search for a player</span>
+<span class="fn">/elo shop</span>             <span class="cm">— Open the cosmetic shop</span>
+<span class="fn">/elo admin</span>            <span class="cm">— Admin panel</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PRICING ═══════════ -->
+<section class="section" id="pricing" style="background:var(--bg-1)">
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:48px">
+      <div class="section-label" style="justify-content:center"><span></span>Pricing</div>
+      <h2 class="section-title" style="text-align:center">Simple, honest <em>pricing.</em></h2>
+      <p class="section-desc" style="margin:0 auto">No subscriptions. No hidden fees. Buy once, use forever.</p>
+    </div>
+
+    <div class="pricing-grid reveal">
+      <div class="pricing-card">
+        <h3>PeaTowny Free</h3>
+        <div class="price">$0 <span>forever</span></div>
+        <p class="price-desc">Full land claiming system with core features.</p>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> Land claiming &amp; chunk management</li>
+          <li><span class="check">✓</span> 61 permission flags</li>
+          <li><span class="check">✓</span> 4 default roles + custom roles</li>
+          <li><span class="check">✓</span> Economy integration (Vault)</li>
+          <li><span class="check">✓</span> Kill-point war system</li>
+          <li><span class="check">✓</span> Beacon warps</li>
+          <li><span class="check">✓</span> Towny migration</li>
+          <li><span class="check">✓</span> Dynmap / BlueMap</li>
+          <li><span class="check">✓</span> PlaceholderAPI (60+ placeholders)</li>
+          <li><span class="cross">✗</span> Nations &amp; diplomacy</li>
+          <li><span class="cross">✗</span> Conquest war mode</li>
+          <li><span class="cross">✗</span> Land levels</li>
+          <li><span class="cross">✗</span> Upkeep / taxes</li>
+          <li><span class="cross">✗</span> Discord integration</li>
+        </ul>
+        <a href="https://builtbybit.com/resources/peatowny.102838/" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:24px" target="_blank">Download Free</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <h3>PeaTowny Premium</h3>
+        <div class="price">$20 <span>one-time</span></div>
+        <p class="price-desc">Everything in Free + powerful server management.</p>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> Everything in Free</li>
+          <li><span class="check">✓</span> Nations &amp; shared governance</li>
+          <li><span class="check">✓</span> Conquest war mode with captures</li>
+          <li><span class="check">✓</span> 5-tier land levels</li>
+          <li><span class="check">✓</span> Relations (ally/neutral/enemy)</li>
+          <li><span class="check">✓</span> Upkeep &amp; nation taxes</li>
+          <li><span class="check">✓</span> Land fly</li>
+          <li><span class="check">✓</span> Rent &amp; sell system</li>
+          <li><span class="check">✓</span> Sub-areas</li>
+          <li><span class="check">✓</span> Land storage</li>
+          <li><span class="check">✓</span> Discord integration</li>
+          <li><span class="check">✓</span> Land expiration</li>
+          <li><span class="check">✓</span> Priority support</li>
+          <li><span class="check">✓</span> Addon API</li>
+        </ul>
+        <a href="https://discord.gg/Y8QhgYaq6K" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:24px" target="_blank">Purchase via Discord</a>
+      </div>
+    </div>
+
+    <div class="commission-card reveal">
+      <h3>Custom Plugin Development</h3>
+      <p>Need something built specifically for your server? We take commissions. Pricing depends on complexity — simple utilities start around $30, complex systems scale from there.</p>
+      <a href="https://discord.gg/Y8QhgYaq6K" class="btn btn-outline" target="_blank">Open a Ticket on Discord</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ MEDIA ═══════════ -->
+<section class="section" id="media">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Media &amp; Showcase</div>
+      <h2 class="section-title">See our plugins <em>in action.</em></h2>
+      <p class="section-desc">Screenshots, videos, and demos from real servers running Pea Studios plugins.</p>
+    </div>
+
+    <div class="media-grid reveal">
+      <div class="media-slot"><div class="media-placeholder"><div class="icon">🎬</div>Plugin showcase video coming soon</div></div>
+      <div class="media-slot"><div class="media-placeholder"><div class="icon">📸</div>PeaTowny land claiming demo</div></div>
+      <div class="media-slot"><div class="media-placeholder"><div class="icon">📸</div>War system in action</div></div>
+      <div class="media-slot"><div class="media-placeholder"><div class="icon">📸</div>Skills GUI &amp; leveling</div></div>
+      <div class="media-slot"><div class="media-placeholder"><div class="icon">🎬</div>PeaForestry degradation demo</div></div>
+      <div class="media-slot"><div class="media-placeholder"><div class="icon">📸</div>Pealo leaderboard &amp; ranks</div></div>
+    </div>
+    <p style="text-align:center;margin-top:24px;font-size:13px;color:var(--text-muted)">Have screenshots of your server using our plugins? Share them in our Discord and get featured here!</p>
+  </div>
+</section>
+
+<!-- ═══════════ ROADMAP ═══════════ -->
+<section class="section" id="roadmap" style="background:var(--bg-1)">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Roadmap</div>
+      <h2 class="section-title">Where we've been.<br><em>Where we're going.</em></h2>
+      <p class="section-desc">Transparency is everything. Here's exactly what we've shipped, what we're working on, and what's next.</p>
+    </div>
+
+    <div class="roadmap-track reveal">
+      <div class="roadmap-item done">
+        <div class="rm-status">● SHIPPED</div>
+        <h4>PeaTowny Free Edition</h4>
+        <p>Full land claiming, roles, permissions, economy, wars, beacon warps, Towny migration, and map integration. Released on BuiltByBit.</p>
+      </div>
+      <div class="roadmap-item done">
+        <div class="rm-status">● SHIPPED</div>
+        <h4>PeaTowny Premium Edition</h4>
+        <p>Nations, conquest wars, land levels, relations, upkeep, taxes, fly, rent/sell, sub-areas, Discord integration, addon API.</p>
+      </div>
+      <div class="roadmap-item done">
+        <div class="rm-status">● SHIPPED</div>
+        <h4>PeaSkills</h4>
+        <p>8 skill trees, 40 perks, hardcore mode, skills GUI, action bar XP. Complete and ready for release.</p>
+      </div>
+      <div class="roadmap-item done">
+        <div class="rm-status">● SHIPPED</div>
+        <h4>PeaForestry</h4>
+        <p>3-stage forest degradation, 8 tree types, performance optimized batch processing. Complete and ready for release.</p>
+      </div>
+      <div class="roadmap-item done">
+        <div class="rm-status">● SHIPPED</div>
+        <h4>Pealo</h4>
+        <p>Dynamic ELO system, 10 ranks, kill points economy, anti-farm, assist tracking, leaderboard GUI, cosmetic shop.</p>
+      </div>
+      <div class="roadmap-item progress">
+        <div class="rm-status">◐ IN PROGRESS</div>
+        <h4>PeaTowny Discord Integration Expansion</h4>
+        <p>Expanding Discord features — war notifications, town chat bridges, raid alerts, and automation addons.</p>
+      </div>
+      <div class="roadmap-item progress">
+        <div class="rm-status">◐ IN PROGRESS</div>
+        <h4>Pea Studios Website</h4>
+        <p>Full website with plugin docs, media, pricing, and community hub.</p>
+      </div>
+      <div class="roadmap-item planned">
+        <div class="rm-status">○ PLANNED</div>
+        <h4>PeaPounds Economy</h4>
+        <p>Community currency system — earn through contributions, spend on plugins and services in the PeaShop.</p>
+      </div>
+      <div class="roadmap-item planned">
+        <div class="rm-status">○ PLANNED</div>
+        <h4>Plugin Bundle</h4>
+        <p>Discounted bundle of all premium plugins for server owners who want the full Pea Studios experience.</p>
+      </div>
+      <div class="roadmap-item planned">
+        <div class="rm-status">○ PLANNED</div>
+        <h4>More Plugins</h4>
+        <p>New plugins based on community suggestions. Have an idea? Drop it in our Discord suggestions channel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ COMMUNITY ═══════════ -->
+<section class="section" id="community">
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:48px">
+      <div class="section-label" style="justify-content:center"><span></span>Community</div>
+      <h2 class="section-title">Join the <em>Pea family.</em></h2>
+      <p class="section-desc" style="margin:0 auto">Get support, suggest features, report bugs, and connect with other server owners.</p>
+    </div>
+
+    <div class="community-grid reveal">
+      <div class="community-card">
+        <div class="icon">💬</div>
+        <h4>Discord Server</h4>
+        <p>Our hub for everything — support, purchases, updates, bug reports, and community chat. 40+ members and growing.</p>
+        <a href="https://discord.gg/Y8QhgYaq6K" class="btn btn-primary btn-sm" target="_blank">Join Discord</a>
+      </div>
+      <div class="community-card">
+        <div class="icon">🏪</div>
+        <h4>BuiltByBit</h4>
+        <p>Download our free plugins, leave reviews, and help us grow on the marketplace. Every download and review counts.</p>
+        <a href="https://builtbybit.com/resources/peatowny.102838/" class="btn btn-outline btn-sm" target="_blank">Visit Store</a>
+      </div>
+      <div class="community-card">
+        <div class="icon">🫛</div>
+        <h4>PeaPounds</h4>
+        <p>Earn community currency through bug reports, suggestions, and invites. P$100 = $1 USD. Spend in the PeaShop on plugins!</p>
+        <a href="https://discord.gg/Y8QhgYaq6K" class="btn btn-outline btn-sm" target="_blank">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3><span class="logo-dot" style="width:8px;height:8px;border-radius:50%;background:var(--pea);box-shadow:0 0 8px var(--pea);display:inline-block"></span>Pea <span>Studios</span></h3>
+        <p>Professional Minecraft plugins built for small servers. Powerful features, familiar commands, zero hassle. Founded 2026.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Plugins</h4>
+        <a href="#plugins">PeaTowny</a>
+        <a href="#plugins">PeaSkills</a>
+        <a href="#plugins">PeaForestry</a>
+        <a href="#plugins">Pealo</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#api">Developer API</a>
+        <a href="#pricing">Pricing</a>
+        <a href="https://pea-studios.github.io/peatowny-wiki/#hero" target="_blank">PeaTowny Wiki</a>
+        <a href="#roadmap">Roadmap</a>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <a href="https://discord.gg/Y8QhgYaq6K" target="_blank">Discord</a>
+        <a href="https://builtbybit.com/resources/peatowny.102838/" target="_blank">BuiltByBit</a>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 Pea Studios. All rights reserved. Single-server licenses apply to all plugin purchases.</div>
+  </div>
+</footer>
+
+<script>
+// ═══ HERO PARTICLES ═══
+(function(){
+  const canvas=document.getElementById('heroCanvas');
+  const ctx=canvas.getContext('2d');
+  let w,h,particles=[];
+  function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight}
+  window.addEventListener('resize',resize);resize();
+
+  class Particle{
+    constructor(){this.reset()}
+    reset(){
+      this.x=Math.random()*w;this.y=Math.random()*h;
+      this.size=Math.random()*3+1;
+      this.speedY=-(Math.random()*.3+.1);
+      this.speedX=(Math.random()-.5)*.2;
+      this.opacity=Math.random()*.5+.1;
+      this.hue=Math.random()>.7?170:150;
+    }
+    update(){
+      this.y+=this.speedY;this.x+=this.speedX;
+      if(this.y<-10)this.reset(),this.y=h+10;
+    }
+    draw(){
+      ctx.fillStyle=`hsla(${this.hue},90%,60%,${this.opacity})`;
+      ctx.fillRect(Math.floor(this.x),Math.floor(this.y),this.size,this.size);
+    }
+  }
+  for(let i=0;i<60;i++)particles.push(new Particle());
+  function animate(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{p.update();p.draw()});
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ═══ NAV SCROLL ═══
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50);
+});
+
+// ═══ HAMBURGER ═══
+document.getElementById('hamburger').addEventListener('click',()=>{
+  document.getElementById('navLinks').classList.toggle('open');
+  document.getElementById('navCta').classList.toggle('open');
+});
+
+// ═══ PLUGIN TABS ═══
+document.querySelectorAll('.plugin-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.plugin-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.plugin-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+  });
+});
+
+// ═══ COUNT UP ═══
+function countUp(){
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const target=parseInt(el.dataset.count);
+    let current=0;
+    const step=Math.ceil(target/40);
+    const timer=setInterval(()=>{
+      current+=step;
+      if(current>=target){current=target;clearInterval(timer)}
+      el.textContent=current;
+    },30);
+  });
+}
+
+// ═══ SCROLL REVEAL ═══
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}
+  });
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// Trigger count up when hero is visible
+const heroObserver=new IntersectionObserver(([e])=>{
+  if(e.isIntersecting){countUp();heroObserver.disconnect()}
+},{threshold:0.3});
+heroObserver.observe(document.querySelector('.hero'));
+
+// ═══ SMOOTH ANCHOR LINKS ═══
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const target=document.querySelector(a.getAttribute('href'));
+    if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    document.getElementById('navLinks').classList.remove('open');
+    document.getElementById('navCta').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
