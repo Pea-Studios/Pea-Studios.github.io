@@ -294,7 +294,7 @@ background-size:48px 48px;opacity:.08;pointer-events:none;z-index:0}
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><div class="num" data-count="4">0</div><div class="label">Plugins</div></div>
-        <div class="hero-stat"><div class="num" data-count="41">0</div><div class="label">Community Members</div></div>
+        <div class="hero-stat"><div class="num" id="memberCount" data-count="0">—</div><div class="label">Community Members</div></div>
         <div class="hero-stat"><div class="num" data-count="160">0</div><div class="label">Features</div></div>
       </div>
     </div>
@@ -957,6 +957,17 @@ const observer=new IntersectionObserver((entries)=>{
 },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
 
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// ═══ LIVE DISCORD MEMBER COUNT ═══
+fetch('https://discord.com/api/v9/invites/Y8QhgYaq6K?with_counts=true')
+  .then(r=>r.json())
+  .then(data=>{
+    const el=document.getElementById('memberCount');
+    if(data.approximate_member_count){
+      el.dataset.count=data.approximate_member_count;
+      el.textContent='0';
+    }
+  }).catch(()=>{});
 
 // Trigger count up when hero is visible
 const heroObserver=new IntersectionObserver(([e])=>{
