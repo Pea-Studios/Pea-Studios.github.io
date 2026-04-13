@@ -435,7 +435,7 @@ background-size:48px 48px;opacity:.08;pointer-events:none;z-index:0}
         <div>
           <span class="plugin-status status-released">● Complete</span>
           <h3 class="plugin-name">PeaForestry</h3>
-          <p class="plugin-tagline">Forest degradation simulation. Trees don't just grow back — manage your world's ecosystem or watch it collapse.</p>
+          <p class="plugin-tagline">Timber-style tree felling plugin. Cut a tree at any point and watch it fall — realistic physics, directional falling, and stump decay.</p>
         </div>
         <div class="plugin-meta">
           <div class="plugin-price">TBA</div>
@@ -443,27 +443,27 @@ background-size:48px 48px;opacity:.08;pointer-events:none;z-index:0}
         </div>
       </div>
 
-      <h4 style="font-family:var(--font-display);font-size:16px;margin-bottom:16px;color:var(--text)">3-Stage Degradation System</h4>
+      <h4 style="font-family:var(--font-display);font-size:16px;margin-bottom:16px;color:var(--text)">Realistic Tree Felling</h4>
       <div class="feature-grid" style="grid-template-columns:repeat(3,1fr)">
         <div class="feature-card" style="border-top:3px solid var(--pea)">
-          <div class="icon">🍃</div><h4>Stage 1: Leaf Loss</h4>
-          <p>After the stress threshold is reached (configurable, default 15 logs), nearby trees begin losing their leaves. A visual warning that the forest is under pressure.</p>
+          <div class="icon">🪓</div><h4>Cut Anywhere</h4>
+          <p>Chop at the bottom and the whole tree falls. Cut in the middle and only the top half falls — the stump stays standing. Realistic split-point physics.</p>
         </div>
         <div class="feature-card" style="border-top:3px solid var(--cyan)">
-          <div class="icon">🌲</div><h4>Stage 2: Tree Collapse</h4>
-          <p>Trees fall sequentially with particles and sound effects. A boss bar shows collapse progress to nearby players. Configurable collapse speed.</p>
+          <div class="icon">🌲</div><h4>Directional Falling</h4>
+          <p>Trees fall in the direction the player is facing. Logs rotate horizontal, leaves partially retained on sky-facing sides for a natural look.</p>
         </div>
         <div class="feature-card" style="border-top:3px solid var(--red)">
-          <div class="icon">💀</div><h4>Stage 3: Ground Decay</h4>
-          <p>The earth itself degrades. Dirt, grass, sand, and gravel are removed, creating an expanding dead zone up to 60 blocks radius.</p>
+          <div class="icon">💀</div><h4>Stump Decay</h4>
+          <p>The ground around the base decays after felling — dirt and grass degrade, leaving a natural clearing where the tree once stood.</p>
         </div>
       </div>
 
       <div class="feature-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));margin-top:16px">
-        <div class="feature-card"><div class="icon">🌳</div><h4>8 Tree Types</h4><p>Oak, Birch, Spruce, Jungle, Acacia, Dark Oak, Mangrove, Cherry.</p></div>
-        <div class="feature-card"><div class="icon">⚡</div><h4>Performance</h4><p>Batch processing, concurrent maps, chunk indexing. Zero lag spikes.</p></div>
-        <div class="feature-card"><div class="icon">🎛️</div><h4>Configurable</h4><p>Stress thresholds, collapse speed, decay radius, particles, sounds — all adjustable.</p></div>
-        <div class="feature-card"><div class="icon">🔧</div><h4>Admin Tools</h4><p>/pf reload, status, reset, test. Full control over forest state.</p></div>
+        <div class="feature-card"><div class="icon">🌳</div><h4>All Tree Types</h4><p>Oak, Birch, Spruce, Jungle, Acacia, Dark Oak, Mangrove, Cherry — all supported.</p></div>
+        <div class="feature-card"><div class="icon">⚡</div><h4>Animated Falling</h4><p>One log per tick animation. Trees visually topple over rather than just disappearing.</p></div>
+        <div class="feature-card"><div class="icon">🎛️</div><h4>Configurable</h4><p>Fall direction, drop items, leaf retention %, stump decay radius, drop delay — all adjustable in config.</p></div>
+        <div class="feature-card"><div class="icon">🔧</div><h4>Single-Tree Only</h4><p>Only the tree you cut is affected. No chain reactions, no area damage. Clean, predictable behavior.</p></div>
       </div>
     </div>
 
@@ -742,7 +742,7 @@ api.<span class="fn">deposit</span>(landId, <span class="str">500.0</span>);
       <div class="media-slot"><div class="media-placeholder"><div class="icon">📸</div>PeaTowny land claiming demo</div></div>
       <div class="media-slot"><div class="media-placeholder"><div class="icon">📸</div>War system in action</div></div>
       <div class="media-slot"><div class="media-placeholder"><div class="icon">📸</div>Skills GUI &amp; leveling</div></div>
-      <div class="media-slot"><div class="media-placeholder"><div class="icon">🎬</div>PeaForestry degradation demo</div></div>
+      <div class="media-slot"><div class="media-placeholder"><div class="icon">🎬</div>PeaForestry tree felling demo</div></div>
       <div class="media-slot"><div class="media-placeholder"><div class="icon">📸</div>Pealo leaderboard &amp; ranks</div></div>
     </div>
     <p style="text-align:center;margin-top:24px;font-size:13px;color:var(--text-muted)">Have screenshots of your server using our plugins? Share them in our Discord and get featured here!</p>
@@ -777,7 +777,7 @@ api.<span class="fn">deposit</span>(landId, <span class="str">500.0</span>);
       <div class="roadmap-item done">
         <div class="rm-status">● SHIPPED</div>
         <h4>PeaForestry</h4>
-        <p>3-stage forest degradation, 8 tree types, performance optimized batch processing. Complete and ready for release.</p>
+        <p>Timber-style tree felling with directional falling, split-point cutting, animated toppling, leaf retention, and stump decay. Complete and ready for release.</p>
       </div>
       <div class="roadmap-item done">
         <div class="rm-status">● SHIPPED</div>
@@ -789,15 +789,15 @@ api.<span class="fn">deposit</span>(landId, <span class="str">500.0</span>);
         <h4>PeaTowny Discord Integration Expansion</h4>
         <p>Expanding Discord features — war notifications, town chat bridges, raid alerts, and automation addons.</p>
       </div>
-      <div class="roadmap-item progress">
-        <div class="rm-status">◐ IN PROGRESS</div>
+      <div class="roadmap-item done">
+        <div class="rm-status">● SHIPPED</div>
         <h4>Pea Studios Website</h4>
-        <p>Full website with plugin docs, media, pricing, and community hub.</p>
+        <p>Full website with plugin catalog, developer API docs, pricing, roadmap, and community hub. Live on GitHub Pages.</p>
       </div>
-      <div class="roadmap-item planned">
-        <div class="rm-status">○ PLANNED</div>
+      <div class="roadmap-item done">
+        <div class="rm-status">● SHIPPED</div>
         <h4>PeaPounds Economy</h4>
-        <p>Community currency system — earn through contributions, spend on plugins and services in the PeaShop.</p>
+        <p>Community currency live in Discord — earn P$ through invites (P$10 each), bug reports, and suggestions. P$100 = $1 USD. Spend in the PeaShop.</p>
       </div>
       <div class="roadmap-item planned">
         <div class="rm-status">○ PLANNED</div>
