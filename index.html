@@ -4,14 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pea Studios</title>
-<meta name="description" content="Minecraft plugins for small servers. PeaTowny, PeaSkills, PeaForestry, Pealo.">
+<meta name="description" content="Minecraft plugins for small servers. PeaNations, PeaSkills, PeaForestry, Pealo.">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  /* primary */
+  /* colours - tried to follow dark mode tips from webflow blog */
+  /* 04-16: nudged green a touch brighter, old value was #4ecb7b - felt muddy next to the dark bg */
   --green:#56d184;
   --green-soft:#56d18412;
   --green-border:#56d18422;
@@ -44,12 +47,19 @@ a{color:var(--green);text-decoration:none}
 a:hover{text-decoration:underline}
 code{font-family:'JetBrains Mono',monospace;font-size:0.85em;background:var(--surface2);padding:2px 6px;border-radius:3px}
 
+/* rebrand banner - removed, we're too small for anyone to care about a rename notice */
+/* css kept commented out in case i want a banner for something else later
+.rebrand-bar{background:#1a2a22;border-bottom:1px solid #2a4a38;font-size:13px;color:var(--text-dim);padding:8px 16px;text-align:center;position:relative}
+.rebrand-bar .x{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-faint);cursor:pointer}
+*/
+
 .wrap{max-width:900px;margin:0 auto;padding:0 24px}
 @media(max-width:600px){.wrap{padding:0 16px}}
 
-/* nav */
+/* -- nav -- */
 nav{border-bottom:1px solid var(--border);padding:16px 0;position:sticky;top:0;background:var(--bg);z-index:50}
-nav .wrap{display:flex;align-items:center;justify-content:space-between}
+nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
+.nav-right{margin-left:auto}
 .nav-left{display:flex;align-items:center;gap:24px}
 .logo{font-family:var(--heading);font-weight:700;font-size:17px;color:var(--white);text-decoration:none;letter-spacing:-0.3px;display:flex;align-items:center;gap:8px}
 .logo:hover{text-decoration:none}
@@ -70,49 +80,74 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between}
   .nav-links.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:16px 24px;gap:12px}
   .nav-right.open{display:flex;position:absolute;top:calc(100% + 140px);left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:0 24px 16px}
 }
+/* this fixed a weird overflow on my phone, no idea why 768 is the magic number but it works */
+@media(max-width:768px){.logo{font-size:16px}}
 
-/* hero */
-.hero{padding:80px 0 70px;text-align:center;background:radial-gradient(ellipse at 50% 0%,#162822 0%,var(--bg) 70%)}
+/* .nav-badge { background: var(--gold); color:#111; font-size:10px; padding:1px 6px; border-radius:3px; margin-left:6px; } */
+/* ^ had a "NEW" badge next to the logo for a day, took it off, might bring it back */
+
+/* hero section */
+/* felt too tall on 1440p, trimmed top padding */
+/* 3d grass block wallpaper, already has dark vignette edges so it blends into the bg */
+.hero{padding:72px 0 64px;text-align:center;background:url('mc-bg-logo.jpg') center 40% / cover no-repeat;position:relative}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,rgba(13,17,23,0.55) 0%,rgba(13,17,23,0.88) 45%,var(--bg) 75%)}
+.hero>*{position:relative;z-index:1}
 .hero-logo{margin-bottom:28px}
 .hero-logo img{width:280px;height:auto;image-rendering:pixelated}
 .hero h1{font-family:var(--heading);font-size:clamp(28px,5vw,44px);font-weight:700;line-height:1.2;color:var(--white);margin-bottom:12px;letter-spacing:-0.5px}
-.hero p{font-size:16px;color:var(--text-dim);max-width:520px;margin:0 auto 32px;line-height:1.65}
+.hero p{font-size:16px;color:var(--text-dim);max-width:540px;margin:0 auto 32px;line-height:1.6}
 .hero-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
 .hero-link{display:inline-flex;align-items:center;gap:6px;padding:11px 26px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s}
 .hero-link-primary{background:var(--green);color:#111}
 .hero-link-primary:hover{box-shadow:0 8px 20px -4px rgba(74,222,128,.3);text-decoration:none}
 .hero-link-secondary{border:1px solid var(--border-light);color:var(--text);background:var(--surface)}
 .hero-link-secondary:hover{border-color:var(--text-dim);text-decoration:none}
-.hero-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:48px;text-align:left}
-.hero-card{padding:20px;background:var(--surface);border-radius:10px;text-decoration:none;transition:all .2s;cursor:pointer;box-shadow:var(--shadow-sm)}
-.hero-card:hover{box-shadow:var(--shadow);transform:translateY(-2px);text-decoration:none}
-.hero-card h4{font-family:var(--heading);font-size:15px;font-weight:600;color:var(--white);margin-bottom:4px}
-.hero-card p{font-size:12px;color:var(--text-dim);line-height:1.5}
-.hero-card .hc-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
-.hc-free{color:var(--green)}
-.hc-paid{color:var(--gold)}
-.hc-soon{color:var(--text-faint)}
-@media(max-width:700px){.hero-logo img{width:200px}.hero-cards{grid-template-columns:1fr 1fr}}
+/* plugin name links under hero buttons. had full cards here before with descriptions
+   and price tags but it looked like every saas template ever. stripped it back to just names */
+.hero-plugs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+.hero-plug{font-family:var(--heading);font-size:13px;font-weight:600;color:var(--text-dim);padding:6px 16px;background:var(--surface);border-radius:6px;text-decoration:none;transition:color .15s}
+.hero-plug:hover{color:var(--white);text-decoration:none}
+@media(max-width:700px){.hero-logo img{width:200px}}
 
-/* sections */
-.section{padding:88px 0}
+/* main content sections */
+.section{padding:80px 0}
 .section-head{margin-bottom:40px}
 .section-head h2{font-family:var(--heading);font-size:32px;font-weight:700;color:var(--white);margin-bottom:8px;letter-spacing:-0.5px}
 .section-head p{color:var(--text-dim);font-size:15px;font-weight:400}
-.section-alt{background:var(--surface);margin:0 -24px;padding:88px 24px}
-@media(max-width:600px){.section-alt{margin:0 -16px;padding:88px 16px}}
+/* .section-sub was for a subtitle line under h2 in the old layout, keeping the rule around in case */
+.section-sub{font-size:13px;color:var(--text-faint);margin-top:4px}
+/* tried mc-typo.jpg behind here (minecraft word cloud wallpaper) but text-on-text
+   looked terrible even at 6% opacity. scrapped it, just solid bg */
+.section-alt{background:var(--surface);margin:0 -24px;padding:80px 24px}
+@media(max-width:600px){.section-alt{margin:0 -16px;padding:80px 16px}}
 
-/* about */
+/* about section - might move callout styling somewhere else later */
 .about p{color:var(--text-dim);font-size:15px;line-height:1.75;margin-bottom:16px;max-width:680px}
-.callout{border-left:3px solid var(--green);padding:16px 20px;background:var(--surface);border-radius:0 6px 6px 0;margin:20px 0;font-size:14px;color:var(--text-dim);line-height:1.6;max-width:680px}
+/* 04-16: bumped left border to 4px and added a subtle background tint, felt flat before */
+.callout{border-left:4px solid var(--green);padding:18px 20px;background:linear-gradient(90deg,var(--green-soft),transparent 80%);border-radius:0 6px 6px 0;margin:24px 0 8px;font-size:14px;color:var(--text-dim);line-height:1.6;max-width:680px}
+.callout code{background:rgba(86,209,132,0.14);color:var(--green)}
 
-/* showcase videos */
+/* demo videos - click to expand */
 .showcase{padding:56px 0}
-.showcase-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.showcase-grid video{width:100%;border-radius:10px;box-shadow:var(--shadow);display:block}
+.showcase-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.showcase-item{position:relative;cursor:pointer}
+.showcase-item video{width:100%;border-radius:10px;box-shadow:var(--shadow);display:block;transition:transform .2s}
+/* firefox was clipping the top of the videos slightly without this - dont remove */
+.showcase-item video{overflow:hidden !important}
+.showcase-label{font-size:11px;color:var(--text-faint);margin-top:6px;text-align:center;font-weight:500}
+.showcase-item:hover video{transform:scale(1.02)}
+@media(max-width:900px){.showcase-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.showcase-grid{grid-template-columns:1fr}}
 
-/* plugin tabs */
+/* fullscreen video overlay when you click one */
+.vid-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s}
+.vid-overlay.open{opacity:1;pointer-events:auto}
+.vid-overlay video{max-width:90vw;max-height:85vh;border-radius:10px;box-shadow:0 0 60px rgba(0,0,0,.5)}
+.vid-overlay .vid-close{position:absolute;top:20px;right:24px;color:#fff;font-size:28px;background:none;border:none;cursor:pointer;opacity:0.6}
+.vid-overlay .vid-close:hover{opacity:1}
+
+/* plugin switcher tabs - based on https://webflow.com/blog/web-design-tips */
+/* NOTE: tried sliding-underline tabs first (saw it on stripe) but pill tabs look cleaner here */
 .tabs{display:flex;gap:2px;background:var(--surface2);border-radius:8px;padding:3px;margin-bottom:28px;overflow-x:auto}
 .tab{padding:9px 20px;border-radius:6px;font-size:13px;font-weight:600;color:var(--text-dim);cursor:pointer;border:none;background:none;white-space:nowrap;transition:all .15s}
 .tab.active{background:var(--surface3);color:var(--white)}
@@ -120,7 +155,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between}
 .panel{display:none}
 .panel.active{display:block}
 
-/* plugin header */
+/* individual plugin info */
 .plug-head{margin-bottom:32px}
 .plug-status{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;padding:3px 10px;border-radius:4px;margin-bottom:10px}
 .plug-status-live{background:#4ade8020;color:var(--green)}
@@ -137,31 +172,39 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between}
 .plug-btn-outline{border:1px solid var(--border-light);color:var(--text)}
 .plug-btn-outline:hover{border-color:var(--text-dim);text-decoration:none}
 
-/* feature list — two-col with accent dots */
+/* feature lists */
+/* todo */
 .feat-list{display:grid;grid-template-columns:1fr 1fr;gap:4px 24px;margin-bottom:28px}
 .feat-item{display:flex;gap:10px;padding:10px 0;font-size:13px;align-items:baseline}
 .feat-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:5px}
 .feat-item strong{font-family:var(--heading);font-weight:600;color:var(--white)}
 .feat-item span{color:var(--text-dim)}
 @media(max-width:600px){.feat-list{grid-template-columns:1fr}}
+/* .feat-check was the old design before i moved to dot bullets. remove eventually */
+/* .feat-check{color:var(--green);font-weight:700;margin-right:6px} */
 
 /* skill rows */
-.skill-list{margin-top:16px;margin-bottom:28px;background:var(--surface2);border-radius:10px;padding:8px 0;box-shadow:var(--shadow-sm)}
-.skill-row{display:flex;gap:12px;padding:9px 20px;font-size:13px;align-items:baseline}
-.skill-row:hover{background:var(--surface3)}
+.skill-list{margin-top:16px;margin-bottom:28px;background:var(--surface2);border-radius:10px;padding:8px 0;box-shadow:var(--shadow-sm);overflow:hidden}
+.skill-row{display:flex;gap:12px;padding:9px 20px;font-size:13px;align-items:baseline;border-left:2px solid transparent;transition:border-color .15s,background .15s}
+.skill-row:hover{background:var(--surface3);border-left-color:var(--green)}
 .skill-name{font-family:var(--heading);font-weight:600;color:var(--white);min-width:100px;flex-shrink:0}
 .skill-perks{color:var(--text-dim)}
 
-/* highlights — 3 col with colored top accent */
+/* highlight cards - had 3-col cards here with colored top borders for each plugin
+   but it looked like a pricing comparison template. went back to just paragraphs.
+   keeping the rules in case i bring them back for something else */
+/*
 .highlights{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
 .highlight{padding:24px;background:var(--surface2);border-radius:10px;border-top:2px solid var(--green);box-shadow:var(--shadow-sm)}
 .highlight h4{font-family:var(--heading);font-size:14px;font-weight:600;color:var(--white);margin-bottom:6px}
 .highlight p{font-size:13px;color:var(--text-dim);line-height:1.55}
 @media(max-width:600px){.highlights{grid-template-columns:1fr}}
+*/
 
 .section-alt .premium{background:var(--surface2)}
 
-/* premium box */
+/* premium upsell box */
+/* border-left idea from refactoring ui - looks way better than wrapping the whole thing in a border */
 .premium{border-left:3px solid var(--green);border-radius:10px;padding:28px 28px 28px 25px;background:var(--surface);margin-top:28px;box-shadow:var(--shadow-sm)}
 .premium h3{font-family:var(--heading);font-size:18px;font-weight:700;color:var(--green);margin-bottom:8px}
 .premium p{font-size:13px;color:var(--text-dim);margin-bottom:16px}
@@ -169,7 +212,8 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between}
 .premium-list div{font-size:13px;color:var(--text-dim);padding:4px 0;padding-left:16px;position:relative}
 .premium-list div::before{content:'>';position:absolute;left:0;color:var(--green)}
 
-/* rank badges */
+/* pealo rank colours - matched to in-game */
+/* annoying to keep in sync, if a rank colour changes in-game it needs changing here too */
 .ranks{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0}
 .rank{padding:4px 12px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;border:1px solid}
 .r-copper{border-color:#b87333;color:#b87333}
@@ -183,10 +227,18 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between}
 .r-gm{border-color:#f87171;color:#f87171}
 .r-apex{border-color:#fbbf24;color:#fbbf24}
 
-/* api */
+/* floating cog decoration on the api section. rotates slowly because why not */
+.deco-cog{position:absolute;right:-20px;top:40px;width:80px;height:80px;opacity:0.06;image-rendering:pixelated;animation:cog-spin 30s linear infinite;pointer-events:none}
+@keyframes cog-spin{to{transform:rotate(360deg)}}
+@media(max-width:900px){.deco-cog{display:none}}
+
+/* api docs section */
 .api-block{background:var(--surface);border-radius:10px;padding:28px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
 .api-block h3{font-family:var(--heading);font-size:17px;font-weight:700;color:var(--white);margin-bottom:12px}
 .api-block h3 .badge{font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;background:var(--green-soft);color:var(--green);font-family:'JetBrains Mono',monospace;margin-left:8px}
+.copyable{cursor:pointer;position:relative}
+.copyable:hover{background:var(--surface3)}
+.copyable.copied::after{content:"copied";position:absolute;left:50%;top:-22px;transform:translateX(-50%);font-family:'Inter',sans-serif;font-size:10px;background:var(--green);color:#111;padding:2px 6px;border-radius:3px;white-space:nowrap}
 pre{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;overflow-x:auto;color:var(--text-dim);margin:10px 0}
 pre .kw{color:var(--blue)}
 pre .fn{color:var(--green)}
@@ -203,10 +255,19 @@ details summary{padding:10px 14px;cursor:pointer;font-size:13px;font-weight:600;
 details summary:hover{background:var(--border)}
 details .inner{padding:14px}
 
-/* pricing */
+/* cave wallpaper behind pricing. the hole in the center lines up roughly behind the cards
+   which is a happy accident */
+.pricing-bg{background:url('mc-cave.jpg') center center / cover no-repeat;position:relative}
+.pricing-bg::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(13,17,23,0.78) 0%,rgba(13,17,23,0.93) 50%,var(--bg) 80%)}
+.pricing-bg>*{position:relative;z-index:1}
+
+/* pricing cards - refactoringui says dont use too many borders so using shadows here */
 .price-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:700px}
-.price-card{background:var(--surface);border-radius:10px;padding:36px 28px;box-shadow:var(--shadow-sm)}
-.price-card.main{box-shadow:var(--shadow);outline:1px solid var(--green)}
+.price-card{background:var(--surface);border-radius:10px;padding:36px 28px;box-shadow:var(--shadow-sm);position:relative}
+/* tried border-top and a "most bought" ribbon here, looked tacky. just a slightly
+   stronger shadow is enough to make it stand out */
+.price-card.main{box-shadow:var(--shadow)}
+/* .price-card.main .ribbon - removed */
 .price-card h3{font-family:var(--heading);font-size:20px;font-weight:700;color:var(--white);margin-bottom:4px}
 .price-card .amount{font-size:32px;font-weight:700;color:var(--green);margin:12px 0 4px}
 .price-card .amount span{font-size:14px;color:var(--text-faint);font-weight:400}
@@ -226,15 +287,26 @@ details .inner{padding:14px}
 @media(max-width:600px){.price-grid{grid-template-columns:1fr}}
 
 
-/* community */
+/* community gets the same bg image as hero but positioned differently so its not identical */
+.comm-section{background:url('mc-bg-logo.jpg') center 70% / cover no-repeat;position:relative}
+.comm-section::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(13,17,23,0.65) 0%,rgba(13,17,23,0.92) 40%,var(--bg) 70%)}
+.comm-section>*{position:relative;z-index:1}
+
+/* community/links (originally called it "side" when it was a sidebar, grid now) */
 .comm-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.comm-card{padding:32px;background:var(--surface);border-radius:10px;box-shadow:var(--shadow-sm)}
+.comm-card{padding:32px;background:var(--surface);border-radius:10px;box-shadow:var(--shadow-sm);transition:transform .18s}
+.comm-card:hover{transform:translateY(-2px)}
 .comm-card h4{font-family:var(--heading);font-size:17px;font-weight:700;color:var(--white);margin-bottom:6px}
 .comm-card p{font-size:13px;color:var(--text-dim);margin-bottom:14px;line-height:1.6}
 @media(max-width:600px){.comm-grid{grid-template-columns:1fr}}
+/* dead: side-card, used to be the old sidebar. delete next pass */
+.side-card{display:none}
 
 /* footer */
-footer{padding:32px 0;margin-top:20px}
+/* TODO: add social links when we have more than just discord */
+/* 04-16: tried a gradient top border on the footer, looked overdone - leaving plain */
+/* added a faint line instead, just enough to separate it from community */
+footer{padding:32px 0;margin-top:0;border-top:1px solid var(--border)}
 footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 footer p{font-size:12px;color:var(--text-faint)}
 .footer-links{display:flex;gap:16px}
@@ -265,87 +337,103 @@ footer p{font-size:12px;color:var(--text-faint)}
 
 <div class="wrap">
 
-<!-- HERO -->
+<!-- hero -->
 <section class="hero">
   <div class="hero-logo">
-    <img src="logo.png" alt="Pea Studios">
+    <img src="logo.png" alt="Pea Studios" style="opacity:0">
   </div>
   <h1>Minecraft plugins for Paper 1.21.1+</h1>
-  <p>Land claiming, skills, tree felling, and PvP rankings. Familiar commands, simple configs, active development.</p>
+  <p>Land claiming, skills, tree felling, PvP rankings. Familiar commands, sane defaults, fixes out the same day.</p>
   <div class="hero-links">
     <a href="https://builtbybit.com/resources/peatowny.102838/" class="hero-link hero-link-primary" target="_blank">Download</a>
     <a href="https://discord.gg/Y8QhgYaq6K" class="hero-link hero-link-secondary" target="_blank">Join Discord</a>
-    <a href="https://pea-studios.github.io/peatowny-wiki/#hero" class="hero-link hero-link-secondary" target="_blank">Wiki</a>
   </div>
-  <div class="hero-cards">
-    <div class="hero-card" onclick="document.querySelector('[data-tab=peatowny]').click();document.getElementById('plugins').scrollIntoView({behavior:'smooth'})">
-      <div class="hc-tag hc-free">Free / $10</div>
-      <h4>PeaTowny</h4>
-      <p>Land claiming with roles, economy, wars, nations, and Towny migration.</p>
-    </div>
-    <div class="hero-card" onclick="document.querySelector('[data-tab=peaskills]').click();document.getElementById('plugins').scrollIntoView({behavior:'smooth'})">
-      <div class="hc-tag hc-soon">Coming Soon</div>
-      <h4>PeaSkills</h4>
-      <p>8 skill trees, 40 perks, hardcore mode. XP from gameplay.</p>
-    </div>
-    <div class="hero-card" onclick="document.querySelector('[data-tab=peaforestry]').click();document.getElementById('plugins').scrollIntoView({behavior:'smooth'})">
-      <div class="hc-tag hc-soon">Coming Soon</div>
-      <h4>PeaForestry</h4>
-      <p>Timber with physics. Trees fall over, stumps decay.</p>
-    </div>
-    <div class="hero-card" onclick="document.querySelector('[data-tab=pealo]').click();document.getElementById('plugins').scrollIntoView({behavior:'smooth'})">
-      <div class="hc-tag hc-paid">$7</div>
-      <h4>Pealo</h4>
-      <p>ELO PvP rankings with 10 tiers and anti-farm.</p>
-    </div>
+  <div class="hero-plugs">
+    <a href="#plugins" class="hero-plug">PeaNations</a>
+    <a href="#plugins" class="hero-plug">PeaSkills</a>
+    <a href="#plugins" class="hero-plug">PeaForestry</a>
+    <a href="#plugins" class="hero-plug">Pealo</a>
   </div>
 </section>
 
-<!-- SHOWCASE -->
+<!-- demo vids - added more 04-16 -->
 <section class="showcase">
   <div class="showcase-grid">
-    <video autoplay loop muted playsinline>
-      <source src="peatowny-land-creation.mp4" type="video/mp4">
-    </video>
-    <video autoplay loop muted playsinline>
-      <source src="peatowny-warp-demo.mp4" type="video/mp4">
-    </video>
+    <div class="showcase-item">
+      <video autoplay loop muted playsinline>
+        <source src="peatowny-land-creation.mp4" type="video/mp4">
+      </video>
+      <div class="showcase-label">Land creation</div>
+    </div>
+    <div class="showcase-item">
+      <video autoplay loop muted playsinline>
+        <source src="peanations-menus.mp4" type="video/mp4">
+      </video>
+      <div class="showcase-label">GUI menus</div>
+    </div>
+    <div class="showcase-item">
+      <video autoplay loop muted playsinline>
+        <source src="peanations-capping.mp4" type="video/mp4">
+      </video>
+      <div class="showcase-label">Capture points</div>
+    </div>
+    <div class="showcase-item">
+      <video autoplay loop muted playsinline>
+        <source src="peanations-resources.mp4" type="video/mp4">
+      </video>
+      <div class="showcase-label">Resource nodes</div>
+    </div>
+    <div class="showcase-item">
+      <video autoplay loop muted playsinline>
+        <source src="peatowny-warp-demo.mp4" type="video/mp4">
+      </video>
+      <div class="showcase-label">Warp system</div>
+    </div>
+    <div class="showcase-item">
+      <video autoplay loop muted playsinline>
+        <source src="peanations-bee.mp4" type="video/mp4">
+      </video>
+      <div class="showcase-label">🐝</div>
+    </div>
   </div>
 </section>
 
-<!-- ABOUT -->
+<!-- lil divider with the logo, breaks up the videos from the text section -->
+<div style="text-align:center;padding:24px 0 0">
+  <img src="logo.png" alt="" style="height:20px;opacity:0.15;image-rendering:pixelated">
+</div>
+
+<!-- about -->
 <section class="section" id="about">
-  <div class="section-head">
-    <h2>About Pea Studios</h2>
-  </div>
+  <h2 style="font-family:var(--heading);font-size:28px;font-weight:700;color:var(--white);margin-bottom:20px;letter-spacing:-0.3px">About</h2>
   <div class="about">
-    <p>Pea Studios started in 2026 because every land claiming plugin was either abandoned, overpriced, or needed 20 config files to set up. So I built PeaTowny as an alternative to Towny and Lands, and it kind of grew from there into a full plugin studio.</p>
-    <p>All the plugins use commands you already know from Towny and Lands, so theres basically no learning curve. The configs have sane defaults and you can just drop the jar in without touching anything. If something breaks, hop in the Discord and I'll usually have a fix out the same day.</p>
+    <p>Pea Studios started in 2026 because every land claiming plugin was either abandoned, overpriced, or needed 20 config files to set up. So I built the land plugin (originally PeaTowny, renamed to PeaNations once the nation and war side basically became the whole identity) as an alternative to Towny and Lands, and it kind of grew from there into a small plugin studio.</p>
+    <p>All the plugins use commands you already know from Towny and Lands, so theres basically no learning curve. Configs have sane defaults, you can just drop the jar in without touching anything. If something breaks, hop in the Discord and I'll usually have a fix out same day.</p>
     <p>I'm not trying to compete with massive plugin teams. I just want to make a few focused plugins that are actually good, keep them updated, and not disappear after two months like half the stuff on SpigotMC.</p>
-    <div class="callout">Same /t and /land commands you already know from Towny and Lands. Configs have sane defaults. Drop the jar in, it just works. Bug reports in Discord usually get a fix same day.</div>
+    <div class="callout">tldr: uses <code>/t</code> and <code>/land</code> commands you already know. drop the jar in, it works out of the box. if it breaks hit me up on Discord.</div>
   </div>
 </section>
 
-<!-- PLUGINS -->
+<!-- plugins -->
 <section class="section section-alt" id="plugins">
   <div class="section-head">
     <h2>Plugins</h2>
-    <p>Four plugins, each doing one thing well.</p>
+    <p>Check out our current projects.</p>
   </div>
 
   <div class="tabs">
-    <button class="tab active" data-tab="peatowny">PeaTowny</button>
+    <button class="tab active" data-tab="peatowny">PeaNations</button>
     <button class="tab" data-tab="peaskills">PeaSkills</button>
     <button class="tab" data-tab="peaforestry">PeaForestry</button>
     <button class="tab" data-tab="pealo">Pealo</button>
   </div>
 
-  <!-- PEATOWNY -->
+  <!-- peanations (still data-tab=peatowny internally so links don't break) -->
   <div class="panel active" id="panel-peatowny">
     <div class="plug-head">
       <span class="plug-status plug-status-live">Released</span>
-      <h3 class="plug-name">PeaTowny</h3>
-      <p class="plug-desc">Land claiming for Paper 1.21.1+. Same commands as Towny and Lands, so switching takes about 5 minutes. Chunk-based claiming, roles, economy, wars, and the usual stuff you need to protect land on a server.</p>
+      <h3 class="plug-name">PeaNations <span style="font-weight:400;color:var(--text-dim);font-size:14px">(ex-PeaTowny)</span></h3>
+      <p class="plug-desc">Land claiming for Paper 1.21.1+. Uses the same commands as Towny and Lands so switching is like 5 minutes. Claiming, roles, economy, nations, wars — all in one plugin.</p>
       <div class="plug-meta">
         <div>
           <span class="plug-price">Free</span>
@@ -353,7 +441,6 @@ footer p{font-size:12px;color:var(--text-faint)}
         </div>
         <div class="plug-links">
           <a href="https://builtbybit.com/resources/peatowny.102838/" class="plug-btn plug-btn-primary" target="_blank">Download</a>
-          <a href="https://pea-studios.github.io/peatowny-wiki/#hero" class="plug-btn plug-btn-outline" target="_blank">Wiki</a>
         </div>
       </div>
     </div>
@@ -372,8 +459,8 @@ footer p{font-size:12px;color:var(--text-faint)}
     </div>
 
     <div class="premium">
-      <h3>Premium - $10 one-time</h3>
-      <p>Everything above, plus management and customization features:</p>
+      <h3><img src="cog-icon.png" alt="" style="height:22px;width:22px;vertical-align:middle;margin-right:6px;image-rendering:pixelated;opacity:0.7">Premium — $10 one-time</h3>
+      <p>Everything above, plus the management and customisation stuff:</p>
       <div class="premium-list">
         <div>Land levels - 5 tiers with bonus chunks at each</div>
         <div>Upkeep - per-chunk cost, auto-unclaims if unpaid</div>
@@ -382,7 +469,7 @@ footer p{font-size:12px;color:var(--text-faint)}
         <div>Rent and sell land to players</div>
         <div>Per-land item storage</div>
         <div>Sub-areas with separate role settings</div>
-        <div>Discord addon support</div>
+        <div>Discord addon (PeaTowny-Discord)</div>
         <div>Auto-delete inactive lands</div>
         <div>MySQL database support</div>
         <div>GUI and message customization</div>
@@ -391,22 +478,16 @@ footer p{font-size:12px;color:var(--text-faint)}
     </div>
   </div>
 
-  <!-- PEASKILLS -->
+  <!-- peaskills -->
   <div class="panel" id="panel-peaskills">
     <div class="plug-head">
       <span class="plug-status plug-status-live">Complete</span>
       <h3 class="plug-name">PeaSkills</h3>
-      <p class="plug-desc">Skills and leveling with 8 skill trees and 40 unlockable perks. Earn XP from mining, combat, farming, and everything else you'd normally do. Perks unlock at levels 10, 25, 50, 75, and 100.</p>
+      <p class="plug-desc">8 skill trees, 40 perks. You just play normally and stuff levels up — mining, combat, farming, fishing, all of it. 5 perks per skill unlocked at levels 10, 25, 50, 75 and 100. Has a GUI with progress bars. Optional hardcore mode where leveling one skill drains the others.</p>
       <div class="plug-meta">
         <span class="plug-price">TBA</span>
         <span class="plug-price-note">Coming soon</span>
       </div>
-    </div>
-
-    <div class="highlights">
-      <div class="highlight"><h4>40 Perks</h4><p>5 per skill, unlocked at levels 10, 25, 50, 75, and 100.</p></div>
-      <div class="highlight" style="border-top-color:var(--blue)"><h4>Skills GUI</h4><p>Inventory menu with progress bars and next unlock preview.</p></div>
-      <div class="highlight" style="border-top-color:var(--gold)"><h4>Hardcore Mode</h4><p>Level one skill, others drain. For specialization servers.</p></div>
     </div>
 
     <div class="skill-list">
@@ -421,22 +502,16 @@ footer p{font-size:12px;color:var(--text-faint)}
     </div>
   </div>
 
-  <!-- PEAFORESTRY -->
+  <!-- peaforestry -->
   <div class="panel" id="panel-peaforestry">
     <div class="plug-head">
       <span class="plug-status plug-status-live">Complete</span>
       <h3 class="plug-name">PeaForestry</h3>
-      <p class="plug-desc">Timber plugin with physics. Trees actually fall over instead of popping into items. Cut at the bottom and the whole tree goes down. Cut in the middle and only the top half falls. Stump stays standing.</p>
+      <p class="plug-desc">Timber but the trees actually fall over instead of popping into items. Chop at the base and the whole thing goes down, chop in the middle and only the top half falls. Falls wherever you're looking, one log per tick so you see it topple. Stump stays and the ground decays.</p>
       <div class="plug-meta">
         <span class="plug-price">TBA</span>
         <span class="plug-price-note">Coming soon</span>
       </div>
-    </div>
-
-    <div class="highlights">
-      <div class="highlight"><h4>Split-Point Cutting</h4><p>Base chop = whole tree. Mid chop = top half only. Stump stays standing.</p></div>
-      <div class="highlight" style="border-top-color:var(--blue)"><h4>Directional Falling</h4><p>Falls where you're facing. Animated toppling, one log per tick.</p></div>
-      <div class="highlight" style="border-top-color:var(--gold)"><h4>Stump Decay</h4><p>Ground degrades after felling. Dirt and grass wear down naturally.</p></div>
     </div>
 
     <div class="feat-list">
@@ -447,19 +522,18 @@ footer p{font-size:12px;color:var(--text-faint)}
     </div>
   </div>
 
-  <!-- PEALO -->
+  <!-- pealo -->
   <div class="panel" id="panel-pealo">
     <div class="plug-head">
       <span class="plug-status plug-status-live">Released</span>
       <h3 class="plug-name">Pealo</h3>
-      <p class="plug-desc">ELO-based PvP rankings with 10 ranks, kill points economy, anti-farm protection, and assist tracking. Built for servers that want competitive PvP without the boosting problems.</p>
+      <p class="plug-desc">ELO PvP rankings. 10 ranks from Copper to Apex, kill points you can spend, anti-farm so people cant boost each other, and assist tracking.</p>
       <div class="plug-meta">
         <span class="plug-price">$7</span>
         <span class="plug-price-note">one-time</span>
       </div>
     </div>
 
-    <h4 style="font-size:15px;font-weight:600;color:var(--white);margin-bottom:8px">10 Ranks</h4>
     <div class="ranks">
       <span class="rank r-copper">Copper 1000+</span>
       <span class="rank r-bronze">Bronze 1200+</span>
@@ -484,16 +558,16 @@ footer p{font-size:12px;color:var(--text-faint)}
   </div>
 </section>
 
-<!-- API -->
-<section class="section" id="api">
+<!-- api -->
+<section class="section" id="api" style="position:relative">
+  <img src="cog-icon.png" alt="" class="deco-cog">
   <div class="section-head">
     <h2>Developer API</h2>
-    <p>For building addons or integrating with other plugins.</p>
   </div>
 
   <div class="api-block">
-    <h3>PeaTowny API <span class="badge">Addon System</span></h3>
-    <p style="font-size:13px;color:var(--text-dim);margin-bottom:14px">Addons go in <code>plugins/PeaTowny/addons/</code> and load automatically.</p>
+    <h3>PeaNations API <span class="badge">Addon System</span></h3>
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:14px">Addons go in <code class="copyable" data-copy="plugins/PeaTowny/addons/" title="click to copy">plugins/PeaTowny/addons/</code> (the internal plugin id is still <code>PeaTowny</code> so your existing data folder keeps working) and load automatically.</p>
 
     <pre><span class="cm">// grab the api</span>
 <span class="kw">PeaTownyAPI</span> api = <span class="kw">PeaTownyAPI</span>.<span class="fn">getInstance</span>();
@@ -627,18 +701,18 @@ api.<span class="fn">deposit</span>(landId, <span class="str">500.0</span>);
   </div>
 </section>
 
-<!-- PRICING -->
-<section class="section" id="pricing">
+<!-- pricing -->
+<section class="section pricing-bg" id="pricing">
   <div class="section-head">
     <h2>Pricing</h2>
-    <p>One-time payments. No subscriptions, no renewals.</p>
+    <p>Pay once, keep it. No subscriptions.</p>
   </div>
 
   <div class="price-grid">
     <div class="price-card">
-      <h3>PeaTowny Free</h3>
+      <h3>PeaNations Free</h3>
       <div class="amount">$0</div>
-      <div class="note">Not a trial. The full plugin.</div>
+      <div class="note">not a trial, actually the full thing</div>
       <ul class="price-list">
         <li><span class="y">✓</span> Land claiming &amp; chunks</li>
         <li><span class="y">✓</span> 61 permission flags</li>
@@ -655,7 +729,7 @@ api.<span class="fn">deposit</span>(landId, <span class="str">500.0</span>);
     </div>
 
     <div class="price-card main">
-      <h3>PeaTowny Premium</h3>
+      <h3>PeaNations Premium</h3>
       <div class="amount">$10 <span>one-time</span></div>
       <div class="note">Everything in Free, plus:</div>
       <ul class="price-list">
@@ -675,35 +749,38 @@ api.<span class="fn">deposit</span>(landId, <span class="str">500.0</span>);
     </div>
   </div>
 
-  <div class="commission">
+  <div class="commission" style="margin-top:32px">
     <h3>Custom Plugins</h3>
-    <p>Need something specific for your server? I take commissions. Simple stuff starts around $10, mid-range $20-40, bigger projects depend on scope. Open a ticket and we can talk about it.</p>
+    <p>Need something built for your server? I do commissions. Small stuff ~$10, mid range $20–40, bigger things depend. Open a ticket.</p>
     <a href="https://discord.gg/Y8QhgYaq6K" class="plug-btn plug-btn-outline" target="_blank">Open a Ticket</a>
   </div>
 </section>
 
 
-<!-- COMMUNITY -->
-<section class="section" id="community">
-  <div class="section-head">
-    <h2>Community</h2>
-  </div>
-
+<!-- community - mc bg again but flipped so it doesn't look copy pasted -->
+<section class="section comm-section" id="community">
+  <h2 style="font-family:var(--heading);font-size:32px;font-weight:700;color:var(--white);margin-bottom:20px;letter-spacing:-0.5px">Community</h2>
   <div class="comm-grid">
     <div class="comm-card">
       <h4>Discord</h4>
-      <p>Support, purchases, updates, bug reports, feature requests. This is where everything happens.</p>
+      <p>Support, purchases, updates, bug reports, feature requests &mdash; basically where everything happens.</p>
       <a href="https://discord.gg/Y8QhgYaq6K" class="plug-btn plug-btn-primary" target="_blank">Join Discord</a>
     </div>
     <div class="comm-card">
       <h4>BuiltByBit</h4>
-      <p>Download free plugins and leave a review if you feel like it. Reviews help a lot with visibility on the marketplace.</p>
+      <p>Download the free edition and leave a review if you feel like it. Reviews genuinely help with visibility on the marketplace.</p>
       <a href="https://builtbybit.com/resources/peatowny.102838/" class="plug-btn plug-btn-outline" target="_blank">Store Page</a>
     </div>
   </div>
 </section>
 
 </div><!-- /wrap -->
+
+<!-- video expand overlay -->
+<div class="vid-overlay" id="vidOverlay">
+  <button class="vid-close" id="vidClose">×</button>
+  <video id="vidBig" autoplay loop muted playsinline></video>
+</div>
 
 <footer>
   <div class="wrap">
@@ -714,38 +791,106 @@ api.<span class="fn">deposit</span>(landId, <span class="str">500.0</span>);
     <div class="footer-links">
       <a href="https://discord.gg/Y8QhgYaq6K" target="_blank">Discord</a>
       <a href="https://builtbybit.com/resources/peatowny.102838/" target="_blank">BuiltByBit</a>
-      <a href="https://pea-studios.github.io/peatowny-wiki/#hero" target="_blank">Wiki</a>
     </div>
   </div>
 </footer>
 
 <script>
-// hamburger
-document.getElementById('hamburger').addEventListener('click',()=>{
-  document.getElementById('navLinks').classList.toggle('open');
-  document.getElementById('navRight').classList.toggle('open');
+// rebrand banner code removed - was overkill for our size
+// left the localStorage dismiss logic in git history if i ever need a banner again
+
+// mobile menu toggle
+var hamburger = document.getElementById('hamburger');
+var navLinks = document.getElementById('navLinks');
+var navRight = document.getElementById('navRight');
+hamburger.addEventListener('click', function(){
+  navLinks.classList.toggle('open');
+  navRight.classList.toggle('open');
 });
 
-// tabs
-document.querySelectorAll('.tab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+// plugin tab switching
+var tabs = document.querySelectorAll('.tab');
+var panels = document.querySelectorAll('.panel');
+for(var i = 0; i < tabs.length; i++){
+  tabs[i].addEventListener('click', function(){
+    for(var j = 0; j < tabs.length; j++){
+      tabs[j].classList.remove('active');
+      panels[j].classList.remove('active');
+    }
+    this.classList.add('active');
+    var panelId = 'panel-' + this.getAttribute('data-tab');
+    document.getElementById(panelId).classList.add('active');
   });
+}
+
+// click-to-copy on .copyable code tags. falls back to a textarea hack
+// for contexts where the clipboard api isnt available (old safari, http pages)
+var copyTargets = document.querySelectorAll('.copyable');
+for(var ci = 0; ci < copyTargets.length; ci++){
+  copyTargets[ci].addEventListener('click', function(){
+    var el = this;
+    var text = el.getAttribute('data-copy') || el.textContent;
+    var done = function(){
+      el.classList.add('copied');
+      setTimeout(function(){ el.classList.remove('copied'); }, 1200);
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done, function(){ /* denied, ignore */ });
+    } else {
+      // fallback
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch(e){}
+      document.body.removeChild(ta);
+    }
+  });
+}
+
+// video expand - click a showcase video to blow it up fullscreen
+var vidOverlay = document.getElementById('vidOverlay');
+var vidBig = document.getElementById('vidBig');
+var vidClose = document.getElementById('vidClose');
+var showcaseItems = document.querySelectorAll('.showcase-item');
+for(var v = 0; v < showcaseItems.length; v++){
+  showcaseItems[v].addEventListener('click', function(){
+    var src = this.querySelector('source');
+    if(!src) return;
+    vidBig.src = src.getAttribute('src');
+    vidBig.play();
+    vidOverlay.classList.add('open');
+  });
+}
+function closeVid(){
+  vidOverlay.classList.remove('open');
+  vidBig.pause();
+  vidBig.removeAttribute('src');
+}
+vidClose.addEventListener('click', closeVid);
+vidOverlay.addEventListener('click', function(e){
+  // close if clicking the backdrop, not the video itself
+  if(e.target === vidOverlay) closeVid();
 });
 
-// smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click',e=>{
+// scroll to section when clicking nav links
+// TODO: fix this on mobile, sometimes it scrolls to wrong spot
+// 04-16 update: closing the mobile menu before the scroll seems to mostly fix it, keep watching
+var anchors = document.querySelectorAll('a[href^="#"]');
+for(var i = 0; i < anchors.length; i++){
+  anchors[i].addEventListener('click', function(e){
     e.preventDefault();
-    const el=document.querySelector(a.getAttribute('href'));
-    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
-    document.getElementById('navLinks').classList.remove('open');
-    document.getElementById('navRight').classList.remove('open');
+    var href = this.getAttribute('href');
+    if(href === '#'){
+      window.scrollTo({top:0, behavior:'smooth'});
+    } else {
+      var target = document.querySelector(href);
+      if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+    // close mobile menu if open
+    navLinks.classList.remove('open');
+    navRight.classList.remove('open');
   });
-});
+}
 </script>
 </body>
 </html>
