@@ -166,9 +166,12 @@ nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
 .plug-status-dev::before{background:var(--gold)}
 .plug-name{font-family:var(--heading);font-size:26px;font-weight:700;color:var(--white);margin-bottom:6px;letter-spacing:-0.3px}
 .plug-desc{color:var(--text-dim);font-size:15px;margin-bottom:14px;max-width:640px}
-.plug-meta{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.plug-meta{display:flex;gap:20px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.plug-price-block{display:flex;align-items:baseline;gap:6px}
 .plug-price{font-size:20px;font-weight:700;color:var(--green)}
 .plug-price-note{font-size:12px;color:var(--text-faint)}
+.plug-name-sub{font-weight:400;color:var(--text-dim);font-size:14px;margin-left:4px}
+.plug-extra{margin-top:24px}
 .plug-links{display:flex;gap:8px}
 .plug-btn{font-size:12px;font-weight:600;padding:7px 18px;border-radius:999px;text-decoration:none;transition:all .15s}
 .plug-btn-primary{background:var(--green);color:#111}
@@ -184,15 +187,6 @@ nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
 .feat-item strong{font-family:var(--heading);font-weight:600;color:var(--white)}
 .feat-item span{color:var(--text-dim)}
 @media(max-width:600px){.feat-list{grid-template-columns:1fr}}
-/* .feat-check was the old design before i moved to dot bullets. remove eventually */
-/* .feat-check{color:var(--green);font-weight:700;margin-right:6px} */
-
-/* skill rows */
-.skill-list{margin-top:16px;margin-bottom:28px;background:var(--surface2);border-radius:10px;padding:8px 0;box-shadow:var(--shadow-sm);overflow:hidden}
-.skill-row{display:flex;gap:12px;padding:9px 20px;font-size:13px;align-items:baseline;border-left:2px solid transparent;transition:border-color .15s,background .15s}
-.skill-row:hover{background:var(--surface3);border-left-color:var(--green)}
-.skill-name{font-family:var(--heading);font-weight:600;color:var(--white);min-width:100px;flex-shrink:0}
-.skill-perks{color:var(--text-dim)}
 
 /* highlight cards - had 3-col cards here with colored top borders for each plugin
    but it looked like a pricing comparison template. went back to just paragraphs.
@@ -431,15 +425,15 @@ footer p{font-size:12px;color:var(--text-faint)}
   <div class="panel active" id="panel-peatowny">
     <div class="plug-head">
       <span class="plug-status plug-status-live">Released</span>
-      <h3 class="plug-name">PeaNations <span style="font-weight:400;color:var(--text-dim);font-size:14px">(ex-PeaTowny)</span></h3>
+      <h3 class="plug-name">PeaNations <span class="plug-name-sub">(ex-PeaTowny)</span></h3>
       <p class="plug-desc">Land claiming for Paper 1.21.1+. Uses the same commands as Towny and Lands so switching is like 5 minutes. Claiming, roles, economy, nations, wars — all in one plugin.</p>
       <div class="plug-meta">
-        <div>
+        <div class="plug-price-block">
           <span class="plug-price">Free</span>
-          <span class="plug-price-note"> / Premium $10</span>
+          <span class="plug-price-note">/ Premium $10</span>
         </div>
         <div class="plug-links">
-          <a href="https://builtbybit.com/resources/peatowny.102838/" class="plug-btn plug-btn-primary" target="_blank">Download</a>
+          <a href="https://builtbybit.com/resources/peatowny.102838/" class="plug-btn plug-btn-primary" target="_blank">Get it</a>
         </div>
       </div>
     </div>
@@ -484,20 +478,25 @@ footer p{font-size:12px;color:var(--text-faint)}
       <h3 class="plug-name">PeaSkills</h3>
       <p class="plug-desc">8 skill trees, 40 perks. You just play normally and stuff levels up — mining, combat, farming, fishing, all of it. 5 perks per skill unlocked at levels 10, 25, 50, 75 and 100. Has a GUI with progress bars. Optional hardcore mode where leveling one skill drains the others.</p>
       <div class="plug-meta">
-        <span class="plug-price">TBA</span>
-        <span class="plug-price-note">Coming soon</span>
+        <div class="plug-price-block">
+          <span class="plug-price">TBA</span>
+          <span class="plug-price-note">coming soon</span>
+        </div>
+        <div class="plug-links">
+          <a href="https://discord.gg/Y8QhgYaq6K" class="plug-btn plug-btn-outline" target="_blank">Get notified</a>
+        </div>
       </div>
     </div>
 
-    <div class="skill-list">
-      <div class="skill-row"><span class="skill-name">Mining</span><span class="skill-perks">Miner's Haste, Auto Smelt, Double Ore, Vein Miner, Fortune Master</span></div>
-      <div class="skill-row"><span class="skill-name">Combat</span><span class="skill-perks">Lifesteal, Crit Edge, Combat Regen, Berserker, Undying</span></div>
-      <div class="skill-row"><span class="skill-name">Farming</span><span class="skill-perks">Green Thumb, Auto Replant, Double Harvest, Nature's Blessing, Harvest Aura</span></div>
-      <div class="skill-row"><span class="skill-name">Woodcutting</span><span class="skill-perks">Lumber Efficiency, Double Logs, Leaf Blower, Timber, Planks Master</span></div>
-      <div class="skill-row"><span class="skill-name">Fishing</span><span class="skill-perks">Double Catch, Patient Angler, Treasure Finder, Rain Dancer, Master Angler</span></div>
-      <div class="skill-row"><span class="skill-name">Archery</span><span class="skill-perks">Steady Aim, Flame Arrows, Multi Shot, Sniper, Arrow Storm</span></div>
-      <div class="skill-row"><span class="skill-name">Alchemy</span><span class="skill-perks">Extended Duration, Splash Range, Potion Saver, Toxin Immune, Alchemist Aura</span></div>
-      <div class="skill-row"><span class="skill-name">Excavation</span><span class="skill-perks">Treasure Digger, Quick Shovel, Archaeologist, Excavate, Earth Master</span></div>
+    <div class="feat-list">
+      <div class="feat-item"><div class="feat-dot"></div><div><strong>Mining</strong> <span>— Miner's Haste, Auto Smelt, Double Ore, Vein Miner, Fortune Master</span></div></div>
+      <div class="feat-item"><div class="feat-dot"></div><div><strong>Combat</strong> <span>— Lifesteal, Crit Edge, Combat Regen, Berserker, Undying</span></div></div>
+      <div class="feat-item"><div class="feat-dot"></div><div><strong>Farming</strong> <span>— Green Thumb, Auto Replant, Double Harvest, Nature's Blessing, Harvest Aura</span></div></div>
+      <div class="feat-item"><div class="feat-dot"></div><div><strong>Woodcutting</strong> <span>— Lumber Efficiency, Double Logs, Leaf Blower, Timber, Planks Master</span></div></div>
+      <div class="feat-item"><div class="feat-dot"></div><div><strong>Fishing</strong> <span>— Double Catch, Patient Angler, Treasure Finder, Rain Dancer, Master Angler</span></div></div>
+      <div class="feat-item"><div class="feat-dot"></div><div><strong>Archery</strong> <span>— Steady Aim, Flame Arrows, Multi Shot, Sniper, Arrow Storm</span></div></div>
+      <div class="feat-item"><div class="feat-dot"></div><div><strong>Alchemy</strong> <span>— Extended Duration, Splash Range, Potion Saver, Toxin Immune, Alchemist Aura</span></div></div>
+      <div class="feat-item"><div class="feat-dot"></div><div><strong>Excavation</strong> <span>— Treasure Digger, Quick Shovel, Archaeologist, Excavate, Earth Master</span></div></div>
     </div>
   </div>
 
@@ -508,8 +507,13 @@ footer p{font-size:12px;color:var(--text-faint)}
       <h3 class="plug-name">PeaForestry</h3>
       <p class="plug-desc">Timber but the trees actually fall over instead of popping into items. Chop at the base and the whole thing goes down, chop in the middle and only the top half falls. Falls wherever you're looking, one log per tick so you see it topple. Stump stays and the ground decays.</p>
       <div class="plug-meta">
-        <span class="plug-price">TBA</span>
-        <span class="plug-price-note">Coming soon</span>
+        <div class="plug-price-block">
+          <span class="plug-price">TBA</span>
+          <span class="plug-price-note">coming soon</span>
+        </div>
+        <div class="plug-links">
+          <a href="https://discord.gg/Y8QhgYaq6K" class="plug-btn plug-btn-outline" target="_blank">Get notified</a>
+        </div>
       </div>
     </div>
 
@@ -528,12 +532,18 @@ footer p{font-size:12px;color:var(--text-faint)}
       <h3 class="plug-name">Pealo</h3>
       <p class="plug-desc">ELO PvP rankings. 10 ranks from Copper to Apex, kill points you can spend, anti-farm so people cant boost each other, and assist tracking.</p>
       <div class="plug-meta">
-        <span class="plug-price">$7</span>
-        <span class="plug-price-note">one-time</span>
+        <div class="plug-price-block">
+          <span class="plug-price">$7</span>
+          <span class="plug-price-note">one-time</span>
+        </div>
+        <div class="plug-links">
+          <!-- TODO: swap to BuiltByBit URL when listing goes live -->
+          <a href="https://discord.gg/Y8QhgYaq6K" class="plug-btn plug-btn-primary" target="_blank">Get it</a>
+        </div>
       </div>
     </div>
 
-    <div class="ranks">
+    <div class="plug-extra ranks">
       <span class="rank r-copper">Copper 1000+</span>
       <span class="rank r-bronze">Bronze 1200+</span>
       <span class="rank r-iron">Iron 1400+</span>
@@ -546,7 +556,7 @@ footer p{font-size:12px;color:var(--text-faint)}
       <span class="rank r-apex">Apex 3500+</span>
     </div>
 
-    <div class="feat-list" style="margin-top:20px">
+    <div class="feat-list">
       <div class="feat-item"><div class="feat-dot"></div><div><strong>Dynamic ELO</strong> <span>— Scales with opponent strength, 1-40 per kill</span></div></div>
       <div class="feat-item"><div class="feat-dot"></div><div><strong>Kill Points</strong> <span>— Earn from kills, spend in admin-configurable shop</span></div></div>
       <div class="feat-item"><div class="feat-dot"></div><div><strong>Anti-Farm</strong> <span>— Same-player kills stop rewarding after 2 (180s window)</span></div></div>
