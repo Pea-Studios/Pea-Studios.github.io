@@ -158,9 +158,12 @@ nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
 
 /* individual plugin info */
 .plug-head{margin-bottom:32px}
-.plug-status{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;padding:3px 10px;border-radius:4px;margin-bottom:10px}
-.plug-status-live{background:#4ade8020;color:var(--green)}
-.plug-status-dev{background:#fbbf2420;color:var(--gold)}
+.plug-status{display:inline-block;font-size:12px;font-weight:600;padding:2px 0 2px 12px;margin-bottom:10px;position:relative}
+.plug-status::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:6px;height:6px}
+.plug-status-live{color:var(--green)}
+.plug-status-live::before{background:var(--green)}
+.plug-status-dev{color:var(--gold)}
+.plug-status-dev::before{background:var(--gold)}
 .plug-name{font-family:var(--heading);font-size:26px;font-weight:700;color:var(--white);margin-bottom:6px;letter-spacing:-0.3px}
 .plug-desc{color:var(--text-dim);font-size:15px;margin-bottom:14px;max-width:640px}
 .plug-meta{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
@@ -177,7 +180,7 @@ nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
 /* todo */
 .feat-list{display:grid;grid-template-columns:1fr 1fr;gap:4px 24px;margin-bottom:28px}
 .feat-item{display:flex;gap:10px;padding:10px 0;font-size:13px;align-items:baseline}
-.feat-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:5px}
+.feat-dot{width:6px;height:6px;background:var(--green);flex-shrink:0;margin-top:7px}
 .feat-item strong{font-family:var(--heading);font-weight:600;color:var(--white)}
 .feat-item span{color:var(--text-dim)}
 @media(max-width:600px){.feat-list{grid-template-columns:1fr}}
@@ -211,7 +214,7 @@ nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
 .premium p{font-size:13px;color:var(--text-dim);margin-bottom:16px}
 .premium-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
 .premium-list div{font-size:13px;color:var(--text-dim);padding:4px 0;padding-left:16px;position:relative}
-.premium-list div::before{content:'>';position:absolute;left:0;color:var(--green)}
+.premium-list div::before{content:'';position:absolute;left:0;top:11px;width:5px;height:5px;background:var(--green)}
 
 /* pealo rank colours - matched to in-game */
 /* annoying to keep in sync, if a rank colour changes in-game it needs changing here too */
