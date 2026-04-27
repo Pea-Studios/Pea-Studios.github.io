@@ -124,8 +124,10 @@ nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
 /* about section - might move callout styling somewhere else later */
 .about p{color:var(--text-dim);font-size:15px;line-height:1.75;margin-bottom:16px;max-width:680px}
 /* 04-16: bumped left border to 4px and added a subtle background tint, felt flat before */
-.callout{border-left:4px solid var(--green);padding:18px 20px;background:linear-gradient(90deg,var(--green-soft),transparent 80%);border-radius:0 6px 6px 0;margin:24px 0 8px;font-size:14px;color:var(--text-dim);line-height:1.6;max-width:680px}
-.callout code{background:rgba(86,209,132,0.14);color:var(--green)}
+.callout{padding:0 0 0 22px;margin:28px 0 8px 4px;font-size:13.5px;color:var(--text-dim);line-height:1.65;max-width:680px;font-style:italic;position:relative}
+.callout::before{content:'';position:absolute;left:0;top:6px;width:10px;height:10px;background:var(--green);border-radius:50%;opacity:0.9}
+.callout::after{content:'';position:absolute;left:4px;top:24px;bottom:6px;width:2px;background:var(--green);opacity:0.25}
+.callout code{background:transparent;color:var(--green);padding:0;font-style:normal}
 
 /* demo videos - click to expand */
 .showcase{padding:56px 0}
@@ -205,7 +207,9 @@ nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
 
 /* premium upsell box */
 /* border-left idea from refactoring ui - looks way better than wrapping the whole thing in a border */
-.premium{border-left:3px solid var(--green);border-radius:10px;padding:28px 28px 28px 25px;background:var(--surface);margin-top:28px;box-shadow:var(--shadow-sm)}
+.premium{border-radius:8px;padding:26px 28px;background:var(--surface2);margin-top:32px;box-shadow:var(--shadow-sm);border:1px solid var(--border-light);position:relative}
+.premium::before{content:'$10';position:absolute;top:-12px;right:18px;background:var(--green);color:#0d1117;font-family:var(--heading);font-size:13px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:0.3px}
+.premium h3{padding-right:60px}
 .premium h3{font-family:var(--heading);font-size:18px;font-weight:700;color:var(--green);margin-bottom:8px}
 .premium p{font-size:13px;color:var(--text-dim);margin-bottom:16px}
 .premium-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
@@ -456,7 +460,7 @@ footer p{font-size:12px;color:var(--text-faint)}
     </div>
 
     <div class="premium">
-      <h3>Premium — $10 one-time</h3>
+      <h3>Premium tier</h3>
       <p>Everything above, plus the management and customisation stuff:</p>
       <div class="premium-list">
         <div>Land levels - 5 tiers with bonus chunks at each</div>
