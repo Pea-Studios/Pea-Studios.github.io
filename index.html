@@ -123,7 +123,6 @@ nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
 
 /* about section - might move callout styling somewhere else later */
 .about p{color:var(--text-dim);font-size:15px;line-height:1.75;margin-bottom:16px;max-width:680px}
-/* 04-16: bumped left border to 4px and added a subtle background tint, felt flat before */
 .callout{padding:0 0 0 22px;margin:28px 0 8px 4px;font-size:13.5px;color:var(--text-dim);line-height:1.65;max-width:680px;font-style:italic;position:relative}
 .callout::before{content:'';position:absolute;left:0;top:6px;width:10px;height:10px;background:var(--green);border-radius:50%;opacity:0.9}
 .callout::after{content:'';position:absolute;left:4px;top:24px;bottom:6px;width:2px;background:var(--green);opacity:0.25}
@@ -205,12 +204,10 @@ nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
 
 .section-alt .premium{background:var(--surface2)}
 
-/* premium upsell box */
-/* border-left idea from refactoring ui - looks way better than wrapping the whole thing in a border */
+/* premium upsell box - card with corner price tag */
 .premium{border-radius:8px;padding:26px 28px;background:var(--surface2);margin-top:32px;box-shadow:var(--shadow-sm);border:1px solid var(--border-light);position:relative}
-.premium::before{content:'$10';position:absolute;top:-12px;right:18px;background:var(--green);color:#0d1117;font-family:var(--heading);font-size:13px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:0.3px}
-.premium h3{padding-right:60px}
-.premium h3{font-family:var(--heading);font-size:18px;font-weight:700;color:var(--green);margin-bottom:8px}
+.premium::before{content:'$10';position:absolute;top:-12px;right:18px;background:var(--green);color:var(--bg);font-family:var(--heading);font-size:13px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:0.3px}
+.premium h3{font-family:var(--heading);font-size:18px;font-weight:700;color:var(--green);margin-bottom:8px;padding-right:60px}
 .premium p{font-size:13px;color:var(--text-dim);margin-bottom:16px}
 .premium-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
 .premium-list div{font-size:13px;color:var(--text-dim);padding:4px 0;padding-left:16px;position:relative}
@@ -230,8 +227,6 @@ nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
 .r-master{border-color:#a78bfa;color:#a78bfa}
 .r-gm{border-color:#f87171;color:#f87171}
 .r-apex{border-color:#fbbf24;color:#fbbf24}
-
-/* floating cog decoration on the api section. rotates slowly because why not */
 
 /* api docs section */
 .api-block{background:var(--surface);border-radius:10px;padding:28px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
@@ -560,7 +555,7 @@ footer p{font-size:12px;color:var(--text-faint)}
 </section>
 
 <!-- api -->
-<section class="section" id="api" style="position:relative">
+<section class="section" id="api">
   <div class="section-head">
     <h2>Developer API</h2>
   </div>
