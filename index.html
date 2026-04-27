@@ -228,9 +228,6 @@ nav .wrap{display:flex;align-items:center;gap:24px;max-width:100%}
 .r-apex{border-color:#fbbf24;color:#fbbf24}
 
 /* floating cog decoration on the api section. rotates slowly because why not */
-.deco-cog{position:absolute;right:-20px;top:40px;width:80px;height:80px;opacity:0.06;image-rendering:pixelated;animation:cog-spin 30s linear infinite;pointer-events:none}
-@keyframes cog-spin{to{transform:rotate(360deg)}}
-@media(max-width:900px){.deco-cog{display:none}}
 
 /* api docs section */
 .api-block{background:var(--surface);border-radius:10px;padding:28px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
@@ -459,7 +456,7 @@ footer p{font-size:12px;color:var(--text-faint)}
     </div>
 
     <div class="premium">
-      <h3><img src="cog-icon.png" alt="" style="height:22px;width:22px;vertical-align:middle;margin-right:6px;image-rendering:pixelated;opacity:0.7">Premium — $10 one-time</h3>
+      <h3>Premium — $10 one-time</h3>
       <p>Everything above, plus the management and customisation stuff:</p>
       <div class="premium-list">
         <div>Land levels - 5 tiers with bonus chunks at each</div>
@@ -481,7 +478,7 @@ footer p{font-size:12px;color:var(--text-faint)}
   <!-- peaskills -->
   <div class="panel" id="panel-peaskills">
     <div class="plug-head">
-      <span class="plug-status plug-status-live">Complete</span>
+      <span class="plug-status plug-status-dev">In Development</span>
       <h3 class="plug-name">PeaSkills</h3>
       <p class="plug-desc">8 skill trees, 40 perks. You just play normally and stuff levels up — mining, combat, farming, fishing, all of it. 5 perks per skill unlocked at levels 10, 25, 50, 75 and 100. Has a GUI with progress bars. Optional hardcore mode where leveling one skill drains the others.</p>
       <div class="plug-meta">
@@ -505,7 +502,7 @@ footer p{font-size:12px;color:var(--text-faint)}
   <!-- peaforestry -->
   <div class="panel" id="panel-peaforestry">
     <div class="plug-head">
-      <span class="plug-status plug-status-live">Complete</span>
+      <span class="plug-status plug-status-dev">In Development</span>
       <h3 class="plug-name">PeaForestry</h3>
       <p class="plug-desc">Timber but the trees actually fall over instead of popping into items. Chop at the base and the whole thing goes down, chop in the middle and only the top half falls. Falls wherever you're looking, one log per tick so you see it topple. Stump stays and the ground decays.</p>
       <div class="plug-meta">
@@ -560,7 +557,6 @@ footer p{font-size:12px;color:var(--text-faint)}
 
 <!-- api -->
 <section class="section" id="api" style="position:relative">
-  <img src="cog-icon.png" alt="" class="deco-cog">
   <div class="section-head">
     <h2>Developer API</h2>
   </div>
